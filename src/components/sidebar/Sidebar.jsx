@@ -16,26 +16,26 @@ const Sidebar = () => {
     return (
         <div className='sidebar'>
             <div className='top'>
-                <span className="logo">HOME</span>
+                <span className="logo">INICIO</span>
             </div>
             <hr />
             <div className='bottom'>
                 <ul className="ul">
-                    <p className="title">MAIN</p>
+                    <p className="title">PRINCIPAL</p>
                     <li className="li">
                         <DashboardIcon className="icon"/>
                         <span className="span">Dashboard</span>
                     </li>
 
-                    <p className="title">SERVICE</p>
+                    <p className="title">SERVICIO</p>
                     <li className="li">
                         <DomainDisabledIcon className="icon"/>
-                        <span className="span">Area</span>
+                        <span className="span">Área</span>
                     </li>
 
                     <li className="li">
                         <AccountTreeIcon className="icon"/>
-                        <span className="span">Area de conocimiento</span>
+                        <span className="span">Área de Conocimiento</span>
                     </li>
 
                     <li className="li">
@@ -60,7 +60,7 @@ const Sidebar = () => {
 
                     <li className="li">
                         <PublicIcon className="icon"/>
-                        <span className="span">Pais</span>
+                        <span className="span">País</span>
                     </li>
 
                     <li className="li">

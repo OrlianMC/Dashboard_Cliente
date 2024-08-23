@@ -1,8 +1,11 @@
 .home{
     display: flex;
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+
     .homeContainer{
         flex: 6;
-        /* background-color: aquamarine; */
     }
 }
 
