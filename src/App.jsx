@@ -10,6 +10,8 @@ import Doctor from "./pages/doctor/Doctor"
 import Doctoral_Student from "./pages/doctoral_student/Doctoral_student"
 import Country from "./pages/country/Country"
 import Person from "./pages/person/Person"
+import PersonCreate from "./pages/person/PersonCreate"
+import PersonUpdate from "./pages/person/PersonUpdate"
 import Program from "./pages/program/Program"
 import Strategic_Sector from "./pages/strategic_sector/Strategic_sector"
 import Tutor from "./pages/tutor/Tutor"
@@ -59,6 +61,14 @@ const router = createBrowserRouter([
   {
     path: "/persona/",
     element: <Person />,
+  },
+  {
+    path: "/persona/crear/",
+    element: <PersonCreate />,
+  },
+  {
+    path: "/persona/modificar/",
+    element: <PersonUpdate />,
   },
   {
     path: "/programa/",
