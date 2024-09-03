@@ -1,8 +1,17 @@
-// import React, { useState } from 'react'
+// import React, { useNavigate } from 'react'
+import { useNavigate } from 'react-router-dom';
 import "./person.css"
 import PersonTable from "../../components/persontable/Persontable"
+import AddIcon from '@mui/icons-material/Add';
+import { Button } from '@mui/material';
 
 const Person = () => {
+  
+  
+  const navigate = useNavigate();
+  const handleNavigate = () => {
+    navigate(`/persona/crear/`);
+  };
 
   return (
     <div className='person'>
@@ -10,7 +19,10 @@ const Person = () => {
         <div className="personList">
           <div className="datatableTitle">
             <span>Añadir Persona</span>
-            <a href='http://localhost:5173/persona/crear/' className="link">AÑADIR</a>
+            {/* <a href='http://localhost:5173/persona/crear/' className="link">AÑADIR</a> */}
+            <Button className='buttom' type="button" onClick={handleNavigate}>
+              <AddIcon/>
+            </Button>
           </div>
           <hr />
           <div className="table">

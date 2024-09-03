@@ -33,7 +33,6 @@
 
 
   .buttom {
-    /* color: #210876 !important; */
     color: black !important;
     background-color: lightgrey !important;
     width: 20ch;
@@ -41,7 +40,6 @@
   }
 
   .buttom:hover {
-    /* background-color: #b3a4fe !important; */
     background-color: #210876 !important;
     color: white !important;
   }

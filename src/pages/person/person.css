@@ -6,15 +6,15 @@
     .personContainer {
         flex: 6;
         background-color: whitesmoke;
-        color:#616161;
+        color: #616161;
 
         .personList {
-            -webkit-box-shadow: 2px 4px 10px 1px rgba(0,0,0,0.47);
-            box-shadow: 2px 4px 10px 1px rgba(201,201,201,0.47);
+            -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+            box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
             padding: 20px;
             margin: 20px;
 
-            .datatableTitle{
+            .datatableTitle {
                 width: 100%;
                 height: 80px;
                 font-size: 24px;
@@ -24,13 +24,19 @@
                 align-items: center;
                 justify-content: space-between;
 
-                .link {
-                    color:#616161;
-                    font-size: 20px;
-                    font-weight: 400;
-                    border: 1px solid #210876;
-                    padding: 5px;
-                    cursor: pointer;
+                .buttom {
+                    /* color: #210876 !important; */
+                    color: black !important;
+                    background-color: lightgrey !important;
+                    width: 40px;
+                    height: 40px;
+                }
+
+                .buttom:hover {
+                    /* background-color: #b3a4fe !important; */
+                    background-color: whitesmoke !important;
+                    color: black !important;
+                    box-shadow: 0 4px 8px rgba(97, 97, 97, 0.5);
                 }
             }
 
