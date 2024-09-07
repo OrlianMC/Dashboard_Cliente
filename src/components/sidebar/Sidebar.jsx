@@ -1,4 +1,4 @@
-// import React from 'react';
+import React from 'react';
 import "./sidebar.css";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import DomainDisabledIcon from '@mui/icons-material/DomainDisabled';
@@ -11,8 +11,10 @@ import PublicIcon from '@mui/icons-material/Public';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
+
     return (
         <div className='sidebar'>
             <div className='top'>
@@ -22,61 +24,85 @@ const Sidebar = () => {
             <div className='bottom'>
                 <ul className="ul">
                     <p className="title">PRINCIPAL</p>
-                    <li className="li">
-                        <DashboardIcon className="icon"/>
-                        <span className="span">Dashboard</span>
-                    </li>
+
+                    <Link to="/" className="link">
+                        <li className="li">
+                            <DashboardIcon className="icon" />
+                            <span className="span">Dashboard</span>
+                        </li>
+                    </Link>
 
                     <p className="title">SERVICIO</p>
-                    <li className="li">
-                        <DomainDisabledIcon className="icon"/>
-                        <span className="span">Área</span>
-                    </li>
 
-                    <li className="li">
-                        <AccountTreeIcon className="icon"/>
-                        <span className="span">Área de Conocimiento</span>
-                    </li>
+                    <Link to="/area/" className="link">
+                        <li className="li">
+                            <DomainDisabledIcon className="icon" />
+                            <span className="span">Área</span>
+                        </li>
+                    </Link>
 
-                    <li className="li">
-                        <ApartmentIcon className="icon"/>
-                        <span className="span">Centro</span>
-                    </li>
+                    <Link to="/areadeconocimiento/" className="link">
+                        <li className="li">
+                            <AccountTreeIcon className="icon" />
+                            <span className="span">Área de Conocimiento</span>
+                        </li>
+                    </Link>
 
-                    <li className="li">
-                        <SchoolIcon className="icon"/>
-                        <span className="span">Doctor</span>
-                    </li>
+                    <Link to="/centro/" className="link">
+                        <li className="li">
+                            <ApartmentIcon className="icon" />
+                            <span className="span">Centro</span>
+                        </li>
+                    </Link>
 
-                    <li className="li">
-                        <AutoStoriesIcon className="icon"/>
-                        <span className="span">Doctorando</span>
-                    </li>
+                    <Link to="/Doctor/" className="link">
+                        <li className="li">
+                            <SchoolIcon className="icon" />
+                            <span className="span">Doctor</span>
+                        </li>
+                    </Link>
 
-                    <li className="li">
-                        <PersonIcon className="icon"/>
-                        <span className="span">Persona</span>
-                    </li>
+                    <Link to="/doctorando/" className="link">
+                        <li className="li">
+                            <AutoStoriesIcon className="icon" />
+                            <span className="span">Doctorando</span>
+                        </li>
+                    </Link>
 
-                    <li className="li">
-                        <PublicIcon className="icon"/>
-                        <span className="span">País</span>
-                    </li>
+                    <Link to="/persona/" className="link">
+                        <li className="li">
+                            <PersonIcon className="icon" />
+                            <span className="span">Persona</span>
+                        </li>
+                    </Link>
 
-                    <li className="li">
-                        <ListAltIcon className="icon"/>
-                        <span className="span">Programa</span>
-                    </li>
+                    <Link to="/pais/" className="link">
+                        <li className="li">
+                            <PublicIcon className="icon" />
+                            <span className="span">País</span>
+                        </li>
+                    </Link>
 
-                    <li className="li">
-                        <PublishedWithChangesIcon className="icon"/>
-                        <span className="span">Sector Estratégico</span>
-                    </li>
+                    <Link to="/programa/" className="link">
+                        <li className="li">
+                            <ListAltIcon className="icon" />
+                            <span className="span">Programa</span>
+                        </li>
+                    </Link>
 
-                    <li className="li">
-                        <AssignmentIndIcon className="icon"/>
-                        <span className="span">Tutor</span>
-                    </li>
+                    <Link to="/sectorest/" className="link">
+                        <li className="li">
+                            <PublishedWithChangesIcon className="icon" />
+                            <span className="span">Sector Estratégico</span>
+                        </li>
+                    </Link>
+
+                    <Link to="/tutor/" className="link">
+                        <li className="li">
+                            <AssignmentIndIcon className="icon" />
+                            <span className="span">Tutor</span>
+                        </li>
+                    </Link>
 
                 </ul>
             </div>

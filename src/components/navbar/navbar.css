@@ -39,7 +39,7 @@
     .items {
         display: flex;
         align-items: center;
-        margin-left: 20px;
+        margin-left: 75%;
 
         .item {
             display: flex;

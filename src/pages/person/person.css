@@ -28,6 +28,7 @@
                     /* color: #210876 !important; */
                     color: black !important;
                     background-color: lightgrey !important;
+                    box-shadow: 0 2px 4px rgba(97, 97, 97, 0.5);
                     width: 40px;
                     height: 40px;
                 }

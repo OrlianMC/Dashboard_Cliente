@@ -37,26 +37,32 @@
                 margin-bottom: 5px;
             }
 
-            .li {
-                display: flex;
-                align-items: center;
-                padding: 5px;
-                cursor: pointer;
+            .link {
 
-                &:hover {
-                    background-color: #b3a4fe;
-                }
+                text-decoration: none;
+                color: inherit;
 
-                .icon {
-                    font-size: 22px;
-                    color: #210876;
-                }
+                .li {
+                    display: flex;
+                    align-items: center;
+                    padding: 5px;
+                    cursor: pointer;
 
-                .span {
-                    font-size: 13px;
-                    font-weight: 700;
-                    color: #616161;
-                    margin-left: 10px;
+                    &:hover {
+                        background-color: #b3a4fe;
+                    }
+
+                    .icon {
+                        font-size: 22px;
+                        color: #210876;
+                    }
+
+                    .span {
+                        font-size: 13px;
+                        font-weight: 700;
+                        color: #616161;
+                        margin-left: 10px;
+                    }
                 }
             }
 

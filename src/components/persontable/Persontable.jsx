@@ -25,8 +25,10 @@
 // import EditIcon from '@mui/icons-material/Edit';
 // import { useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
+// import SearchIcon from '@mui/icons-material/Search';
+// import './persontable.css';
 
-// function createData(id, nombre, apellido, sexo, plantillaarea_idarea, pais_idpais, centro_idcentro, sectorest_idsectorest,) {
+// function createData(id, nombre, apellido, sexo, plantillaarea_idarea, pais_idpais, centro_idcentro, sectorest_idsectorest) {
 //   return {
 //     id,
 //     nombre,
@@ -70,10 +72,6 @@
 //     : (a, b) => -descendingComparator(a, b, orderBy);
 // }
 
-// // Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// // stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// // only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// // with exampleArray.slice().sort(exampleComparator)
 // function stableSort(array, comparator) {
 //   const stabilizedThis = array.map((el, index) => [el, index]);
 //   stabilizedThis.sort((a, b) => {
@@ -87,65 +85,19 @@
 // }
 
 // const headCells = [
-//   {
-//     id: 'id',
-//     numeric: false,
-//     disablePadding: false,
-//     label: 'ID',
-//   },
-//   {
-//     id: 'nombre',
-//     numeric: false,
-//     disablePadding: false,
-//     label: 'Nombre',
-//   },
-//   {
-//     id: 'apellido',
-//     numeric: false,
-//     disablePadding: false,
-//     label: 'Apellidos',
-//   },
-//   {
-//     id: 'sexo',
-//     numeric: false,
-//     disablePadding: false,
-//     label: 'Sexo',
-//   },
-//   {
-//     id: 'plantillaarea_idarea',
-//     numeric: false,
-//     disablePadding: false,
-//     label: 'Plantilla',
-//   },
-//   {
-//     id: 'pais_idpais',
-//     numeric: false,
-//     disablePadding: false,
-//     label: 'País',
-//   },
-//   {
-//     id: 'centro_idcentro',
-//     numeric: false,
-//     disablePadding: false,
-//     label: 'Centro',
-//   },
-//   {
-//     id: 'sectorest_idsectorest',
-//     numeric: false,
-//     disablePadding: false,
-//     label: 'Sector Estratégico',
-//   },
-//   {
-//     id: 'edicion',
-//     numeric: false,
-//     disablePadding: false,
-//     label: 'Edición',
-//   },
+//   { id: 'id', numeric: false, disablePadding: false, label: 'ID' },
+//   { id: 'nombre', numeric: false, disablePadding: false, label: 'Nombre' },
+//   { id: 'apellido', numeric: false, disablePadding: false, label: 'Apellidos' },
+//   { id: 'sexo', numeric: false, disablePadding: false, label: 'Sexo' },
+//   { id: 'plantillaarea_idarea', numeric: false, disablePadding: false, label: 'Plantilla' },
+//   { id: 'pais_idpais', numeric: false, disablePadding: false, label: 'País' },
+//   { id: 'centro_idcentro', numeric: false, disablePadding: false, label: 'Centro' },
+//   { id: 'sectorest_idsectorest', numeric: false, disablePadding: false, label: 'Sector Estratégico' },
+//   { id: 'edicion', numeric: false, disablePadding: false, label: 'Edición' },
 // ];
 
 // function EnhancedTableHead(props) {
-//   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
-//     props;
+//   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
 //   const createSortHandler = (property) => (event) => {
 //     onRequestSort(event, property);
 //   };
@@ -159,16 +111,13 @@
 //             indeterminate={numSelected > 0 && numSelected < rowCount}
 //             checked={rowCount > 0 && numSelected === rowCount}
 //             onChange={onSelectAllClick}
-//             inputProps={{
-//               'aria-label': 'select all desserts',
-//             }}
+//             inputProps={{ 'aria-label': 'select all desserts' }}
 //           />
 //         </TableCell>
 //         {headCells.map((headCell) => (
 //           <TableCell
 //             key={headCell.id}
 //             align={headCell.numeric ? 'right' : 'left'}
-//             // align='left'
 //             padding={headCell.disablePadding ? 'none' : 'normal'}
 //             sortDirection={orderBy === headCell.id ? order : false}
 //           >
@@ -203,14 +152,13 @@
 // function EnhancedTableToolbar(props) {
 //   const { numSelected, onDelete } = props;
 
-// //----------------------------------------------------------------------
-//   // const handleDelete = () => {
-//   //   console.log('Deleting', );
-//   //   // const newRows = rows.filter((row) => !selected.includes(row.id));
-//   //   // setRows(newRows); // Asegúrate de que esta línea esté presente
-//   //   // setSelected([]);
-//   // };
-// //------------------------------------------------------------------
+//   const [searchTerm, setSearchTerm] = useState('');
+
+//   const handleSearch = () => {
+//     console.log('Búsqueda:', searchTerm)
+//     setSearchTerm('');
+//   };
+
 //   const handleFilter = () => {
 //     console.log('Filtrar lista');
 //   };
@@ -221,28 +169,35 @@
 //         pl: { sm: 2 },
 //         pr: { xs: 1, sm: 1 },
 //         ...(numSelected > 0 && {
-//           bgcolor: (theme) =>
-//             alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+//           bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
 //         }),
 //       }}
 //     >
 //       {numSelected > 0 ? (
-//         <Typography
-//           sx={{ flex: '1 1 100%' }}
-//           color="inherit"
-//           variant="subtitle1"
-//           component="div"
-//         >
+//         <Typography sx={{ flex: '1 1 100%' }} color="inherit" variant="subtitle1" component="div">
 //           {numSelected} elemento/s seleccionado/s
 //         </Typography>
 //       ) : (
 //         <Typography
 //           sx={{ flex: '1 1 100%' }}
-//           variant="h6"
-//           id="tableTitle"
-//           component="div"
+//           variant="h5" id="tableTitle"
+//           component="div" display={'flex'}
+//           justifyContent={'space-between'}
+//           marginRight={'30px'}
 //         >
 //           Personas
+//           <div className="search">
+//             <input
+//                 type="text"
+//                 className="input"
+//                 placeholder="Búsqueda"
+//                 value={searchTerm}
+//                 onChange={(e) => setSearchTerm(e.target.value)}
+//             />
+//             <IconButton onClick={handleSearch}>
+//                 <SearchIcon />
+//             </IconButton>
+//         </div>
 //         </Typography>
 //       )}
 
@@ -259,23 +214,24 @@
 //           </IconButton>
 //         </Tooltip>
 //       )}
+
 //     </Toolbar>
 //   );
 // }
 
 // EnhancedTableToolbar.propTypes = {
 //   numSelected: PropTypes.number.isRequired,
-//   onDelete: PropTypes.func.isRequired, //*************************** */
+//   onDelete: PropTypes.func.isRequired,
 // };
 
 // export default function EnhancedTable() {
-//   const [order, setOrder] = React.useState('asc');
-//   const [orderBy, setOrderBy] = React.useState('calories');
-//   const [selected, setSelected] = React.useState([]);
-//   const [rows, setRows] = useState(initialRows); //********************
-//   const [page, setPage] = React.useState(0);
-//   const [dense, setDense] = React.useState(false);
-//   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+//   const [order, setOrder] = useState('asc');
+//   const [orderBy, setOrderBy] = useState('id');
+//   const [selected, setSelected] = useState([]);
+//   const [rows, setRows] = useState(initialRows);
+//   const [page, setPage] = useState(0);
+//   const [dense, setDense] = useState(false);
+//   const [rowsPerPage, setRowsPerPage] = useState(5);
 //   const navigate = useNavigate();
 
 //   const handleRequestSort = (event, property) => {
@@ -293,11 +249,10 @@
 //     setSelected([]);
 //   };
 
-  
 //   const handleClick = (event, id) => {
 //     const selectedIndex = selected.indexOf(id);
 //     let newSelected = [];
-    
+
 //     if (selectedIndex === -1) {
 //       newSelected = newSelected.concat(selected, id);
 //     } else if (selectedIndex === 0) {
@@ -312,14 +267,11 @@
 //     }
 //     setSelected(newSelected);
 //   };
-  
-//   //*************************************************************** */
+
 //   const handleDelete = () => {
-//     // Imprimir los IDs seleccionados en la consola
-//     console.log("IDs seleccionados para eliminar:", selected);
+//     console.log("Eliminar:", selected);
+//     // Aquí puedes implementar la lógica para eliminar los elementos, si es necesario.
 //   };
-//   //***************************************************************
-  
 
 //   const handleEdit = (row) => {
 //     console.log('Editando fila:', row);
@@ -341,9 +293,7 @@
 
 //   const isSelected = (id) => selected.indexOf(id) !== -1;
 
-//   // Avoid a layout jump when reaching the last page with empty rows.
-//   const emptyRows =
-//     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+//   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
 //   const visibleRows = React.useMemo(
 //     () =>
@@ -357,7 +307,7 @@
 //   return (
 //     <Box sx={{ width: '100%' }}>
 //       <Paper sx={{ width: '100%', mb: 2 }}>
-//         <EnhancedTableToolbar numSelected={selected.length onDelete={handleDelete}} />
+//         <EnhancedTableToolbar numSelected={selected.length} onDelete={handleDelete} />
 //         <TableContainer>
 //           <Table
 //             sx={{ minWidth: 750 }}
@@ -392,18 +342,10 @@
 //                       <Checkbox
 //                         color="primary"
 //                         checked={isItemSelected}
-//                         inputProps={{
-//                           'aria-labelledby': labelId,
-//                         }}
+//                         inputProps={{ 'aria-labelledby': labelId }}
 //                       />
 //                     </TableCell>
-//                     <TableCell
-//                       component="th"
-//                       id={labelId}
-//                       scope="row"
-//                       padding="normal"
-//                     // align='left'
-//                     >
+//                     <TableCell component="th" id={labelId} scope="row" padding="normal">
 //                       {row.id}
 //                     </TableCell>
 //                     <TableCell align="left">{row.nombre}</TableCell>
@@ -430,11 +372,7 @@
 //                 );
 //               })}
 //               {emptyRows > 0 && (
-//                 <TableRow
-//                   style={{
-//                     height: (dense ? 33 : 53) * emptyRows,
-//                   }}
-//                 >
+//                 <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
 //                   <TableCell colSpan={6} />
 //                 </TableRow>
 //               )}
@@ -459,7 +397,8 @@
 //   );
 // }
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+////***************************************************************************************************************** */
+
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
@@ -481,12 +420,14 @@ import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
+// import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import SearchIcon from '@mui/icons-material/Search';
+import './persontable.css';
 
 function createData(id, nombre, apellido, sexo, plantillaarea_idarea, pais_idpais, centro_idcentro, sectorest_idsectorest) {
   return {
@@ -503,17 +444,17 @@ function createData(id, nombre, apellido, sexo, plantillaarea_idarea, pais_idpai
 
 const initialRows = [
   createData(1, 'Orlián', 'Mesa Cáceres', 'Masculino', 'Facultad 4', 'Cuba', 'Universidad de las Ciencias Informáticas', 'Tecnologías'),
-  createData(2, 'Melizza', 'Mesa Cáceres', 'M', 'Fac 4', 'Cuba', 'UCI', 'Tecnologías'),
+  createData(2, 'Melizza', 'Reyes Estrada', 'M', 'Fac 4', 'Cuba', 'UCI', 'Tecnologías'),
   createData(3, 'Lian Carlos', 'Mesa Cáceres', 'M', 'Fac 4', 'Cuba', 'UCI', 'Tecnologías'),
-  createData(4, 'Adrian', 'Mesa Cáceres', 'M', 'Fac 4', 'Cuba', 'UCI', 'Tecnologías'),
+  createData(4, 'Adrian', 'Torres Arencibia', 'M', 'Fac 4', 'Cuba', 'UCI', 'Tecnologías'),
   createData(5, 'Pepe', 'Mesa Cáceres', 'M', 'Fac 4', 'Cuba', 'UCI', 'Tecnologías'),
-  createData(6, 'Omar', 'Mesa Cáceres', 'M', 'Fac 4', 'Cuba', 'UCI', 'Tecnologías'),
-  createData(7, 'Orlián', 'Mesa Cáceres', 'M', 'Fac 4', 'Cuba', 'UCI', 'Tecnologías'),
+  createData(6, 'Omar', 'Hernández Martínez', 'M', 'Fac 4', 'Cuba', 'UCI', 'Tecnologías'),
+  createData(7, 'Orlián', 'Tanque del Cerro', 'M', 'Fac 4', 'Cuba', 'UCI', 'Tecnologías'),
   createData(8, 'Melizza', 'Mesa Cáceres', 'M', 'Fac 4', 'Cuba', 'UCI', 'Tecnologías'),
   createData(9, 'Lian Carlos', 'Mesa Cáceres', 'M', 'Fac 4', 'Cuba', 'UCI', 'Tecnologías'),
   createData(10, 'Adrian', 'Mesa Cáceres', 'M', 'Fac 4', 'Cuba', 'UCI', 'Tecnologías'),
-  createData(11, 'Pepe', 'Mesa Cáceres', 'M', 'Fac 4', 'Cuba', 'UCI', 'Tecnologías'),
-  createData(12, 'Omar', 'Mesa Cáceres', 'M', 'Fac 4', 'Cuba', 'UCI', 'Tecnologías'),
+  createData(11, 'Pepe', 'García Márquez', 'M', 'Fac 4', 'Cuba', 'UCI', 'Tecnologías'),
+  createData(12, 'Omar', 'Martínez Urrutia', 'M', 'Fac 4', 'Cuba', 'UCI', 'Tecnologías'),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -610,11 +551,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, onDelete } = props;
-
-  const handleFilter = () => {
-    console.log('Filtrar lista');
-  };
+  const { numSelected, onDelete, searchTerm, handleSearch } = props;
 
   return (
     <Toolbar
@@ -631,8 +568,26 @@ function EnhancedTableToolbar(props) {
           {numSelected} elemento/s seleccionado/s
         </Typography>
       ) : (
-        <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
+        <Typography
+          sx={{ flex: '1 1 100%' }}
+          variant="h5" id="tableTitle"
+          component="div" display={'flex'}
+          justifyContent={'space-between'}
+          marginRight={'10px'}
+        >
           Personas
+          <div className="search">
+            <input
+                type="text"
+                className="input"
+                placeholder="Búsqueda"
+                value={searchTerm}
+                onChange={handleSearch}
+            />
+            <IconButton>
+                <SearchIcon />
+            </IconButton>
+          </div>
         </Typography>
       )}
 
@@ -642,13 +597,14 @@ function EnhancedTableToolbar(props) {
             <DeleteIcon />
           </IconButton>
         </Tooltip>
-      ) : (
-        <Tooltip title="Filtrar lista">
-          <IconButton onClick={handleFilter}>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
+      ) : null}
+      {/* // ) : (
+      //   <Tooltip title="Filtrar lista">
+      //     <IconButton onClick={handleFilter}>
+      //       <FilterListIcon />
+      //     </IconButton>
+      //   </Tooltip>
+      // )} */}
     </Toolbar>
   );
 }
@@ -656,6 +612,8 @@ function EnhancedTableToolbar(props) {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onDelete: PropTypes.func.isRequired,
+  searchTerm: PropTypes.string.isRequired,
+  handleSearch: PropTypes.func.isRequired,
 };
 
 export default function EnhancedTable() {
@@ -666,6 +624,7 @@ export default function EnhancedTable() {
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [searchTerm, setSearchTerm] = useState(''); // Estado para el término de búsqueda
   const navigate = useNavigate();
 
   const handleRequestSort = (event, property) => {
@@ -704,7 +663,6 @@ export default function EnhancedTable() {
 
   const handleDelete = () => {
     console.log("Eliminar:", selected);
-    // Aquí puedes implementar la lógica para eliminar los elementos, si es necesario.
   };
 
   const handleEdit = (row) => {
@@ -725,23 +683,39 @@ export default function EnhancedTable() {
     setDense(event.target.checked);
   };
 
-  const isSelected = (id) => selected.indexOf(id) !== -1;
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const filteredRows = rows.filter((row) =>
+    row.nombre.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    row.apellido.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    row.plantillaarea_idarea.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    row.pais_idpais.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    row.centro_idcentro.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    row.sectorest_idsectorest.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const visibleRows = React.useMemo(
     () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
+      stableSort(filteredRows, getComparator(order, orderBy)).slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,
       ),
-    [order, orderBy, page, rowsPerPage],
+    [order, orderBy, page, rowsPerPage, filteredRows],
   );
+
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
 
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} onDelete={handleDelete} />
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          onDelete={handleDelete}
+          searchTerm={searchTerm}
+          handleSearch={handleSearch}
+        />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -754,11 +728,11 @@ export default function EnhancedTable() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={filteredRows.length}
             />
             <TableBody>
               {visibleRows.map((row, index) => {
-                const isItemSelected = isSelected(row.id);
+                const isItemSelected = selected.indexOf(row.id) !== -1;
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
@@ -816,7 +790,7 @@ export default function EnhancedTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={filteredRows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
