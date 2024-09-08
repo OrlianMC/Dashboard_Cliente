@@ -6,6 +6,8 @@ import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import "./personForm.css";
 
+import { getPerson, postPerson, putPerson, deletePerson } from '../../../api/person_api';
+
 // Opciones para los campos
 const sexo_currencies = [
   { value: 'Masculino', label: 'M' },
@@ -69,10 +71,12 @@ export default function BasicTextFields({ initialData }) {
     } else {
       // Lógica para crear un nuevo registro
       console.log("Crear:", formData);
+      const personas = getPerson();
+      console.log("Personas:", personas);
     }
 
     setFormData(initialFormData); // Restablecer el formulario
-
+    navigate(-1);
     // Aquí puedes agregar la lógica para enviar los datos a tu API
   };
 

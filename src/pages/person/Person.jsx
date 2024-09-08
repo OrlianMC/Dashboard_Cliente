@@ -19,7 +19,6 @@ const Person = () => {
         <div className="personList">
           <div className="datatableTitle">
             <span>Añadir Persona</span>
-            {/* <a href='http://localhost:5173/persona/crear/' className="link">AÑADIR</a> */}
             <Button className='buttom' type="button" onClick={handleNavigate}>
               <AddIcon/>
             </Button>
