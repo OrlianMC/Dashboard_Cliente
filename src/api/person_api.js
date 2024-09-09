@@ -6,7 +6,7 @@ export const getPerson = () => {
     //         'Authorization': 'Bearer ' + tokenAccess
     //     }
     // };
-    console.log("Metodo get")
+    console.log("Metodo getPerson")
     return axios.get('http://127.0.0.1:8000/persona/personas/')
 }
 
@@ -16,7 +16,7 @@ export const postPerson = (person) => {
     //         'Authorization': 'Bearer ' + tokenAccess
     //     }
     // };
-    console.log("Metodo post")
+    console.log("Metodo postPerson")
     return axios.post('http://127.0.0.1:8000/persona/personas/', person)
 }
 
@@ -26,7 +26,7 @@ export const deletePerson = (id) => {
     //         'Authorization': 'Bearer ' + tokenAccess
     //     }
     // };
-    console.log("Metodo delete")
+    console.log("Metodo deletePerson")
     return axios.delete('http://127.0.0.1:8000/persona/personas/', id)
 }
 
@@ -36,6 +36,6 @@ export const putPerson = (person) => {
     //         'Authorization': 'Bearer ' + tokenAccess
     //     }
     // };
-    console.log("Metodo put")
+    console.log("Metodo putPerson")
     return axios.put('http://127.0.0.1:8000/persona/personas/', person)
 }
