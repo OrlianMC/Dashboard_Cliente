@@ -16,84 +16,22 @@ import Program from "./pages/program/Program"
 import Strategic_Sector from "./pages/strategic_sector/Strategic_sector"
 import Tutor from "./pages/tutor/Tutor"
 import "./App.css"
-
 import Sidebar from "./components/sidebar/Sidebar";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
-
-// const router = createBrowserRouter([
-//   {
-//     path: "/", element: <Home />,
-//   },
-//   {
-//     path: "/login/", element: <Login />,
-//   },
-//   {
-//     path: "/register/", element: <Register />,
-//   },
-//   {
-//     path: "/area/", element: <Area />,
-//   },
-//   {
-//     path: "/areadeconocimiento/", element: <Knowledge_Area />,
-//   },
-//   {
-//     path: "/centro/", element: <Center />,
-//   },
-//   {
-//     path: "/doctor/", element: <Doctor />,
-//   },
-//   {
-//     path: "/doctorando/", element: <Doctoral_Student />,
-//   },
-//   {
-//     path: "/pais/", element: <Country />,
-//   },
-//   {
-//     path: "/persona/", element: <Person />,
-//   },
-//   {
-//     path: "/persona/crear/", element: <PersonCreate />,
-//   },
-//   {
-//     path: "/persona/modificar/", element: <PersonUpdate />,
-//   },
-//   {
-//     path: "/programa/", element: <Program />,
-//   },
-//   {
-//     path: "/sectorest/", element: <Strategic_Sector />,
-//   },
-//   {
-//     path: "/tutor/", element: <Tutor />,
-//   },
-// ]);
-
+import { DataProvider } from "./dataContext/dataContext";
 
 function App() {
-  // return (
-  //   // <BrowserRouter>
-  //     <div className="app">
-  //       <div className="flexProperty">
-  //         <Sidebar />
-  //         <div className="appContainer">
-  //           <Navbar />
-  //           <RouterProvider router={router} />
-  //         </div>
-  //       </div>
-  //       <Footer />
-  //     </div>
-  //   // </BrowserRouter>
-  // );
 
   return (
-    <BrowserRouter>
-      <div className="app">
-        <div className="flexProperty">
-          <Sidebar />
-          <div className="appContainer">
-            <Navbar />
-            <Routes>
+    <DataProvider>
+      <BrowserRouter>
+        <div className="app">
+          <div className="flexProperty">
+            <Sidebar />
+            <div className="appContainer">
+              <Navbar />
+              <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login/" element={<Login />} />
                 <Route path="/register/" element={<Register />} />
@@ -109,12 +47,13 @@ function App() {
                 <Route path="/programa/" element={<Program />} />
                 <Route path="/sectorest/" element={<Strategic_Sector />} />
                 <Route path="/tutor/" element={<Tutor />} />
-            </Routes>
+              </Routes>
+            </div>
           </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
-    </BrowserRouter>
+      </BrowserRouter>
+    </DataProvider>
   );
 }
 

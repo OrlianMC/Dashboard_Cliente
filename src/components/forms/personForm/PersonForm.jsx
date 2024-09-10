@@ -5,12 +5,8 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import "./personForm.css";
-
-import { getPerson, postPerson, putPerson, deletePerson } from '../../../api/person_api';
-import { getArea } from '../../../api/area_api';
-import { getCenter } from '../../../api/center_api';
-import { getCountry } from '../../../api/country_api';
-import { getSector } from '../../../api/sector_api';
+import { DataContext } from '../../../dataContext/dataContext';
+import { useContext } from 'react';
 
 // Opciones para los campos
 const sexo_currencies = [
@@ -22,6 +18,7 @@ export default function BasicTextFields({ initialData }) {
   const initialFormData = {
     nombre: '',
     apellido: '',
+    ci: '',
     sexo: '',
     plantillaarea_idarea: '',
     pais_idpais: '',
@@ -30,63 +27,8 @@ export default function BasicTextFields({ initialData }) {
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const [areaCurrencies, setAreaCurrencies] = useState([]);
-  const [centerCurrencies, setCenterCurrencies] = useState([]);
-  const [countryCurrencies, setCountryCurrencies] = useState([]);
-  const [sectorCurrencies, setSectorCurrencies] = useState([]);
+  const { areas, centers, countries, sectors } = useContext(DataContext);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchAreas = async () => {
-      try {
-        const response = await getArea();
-        setAreaCurrencies(response.data);
-      } catch (error) {
-        console.error("Error al cargar áreas:", error);
-      }
-    };
-
-    fetchAreas();
-  }, []);
-
-  useEffect(() => {
-    const fetchCenters = async () => {
-      try {
-        const response = await getCenter();
-        setCenterCurrencies(response.data);
-      } catch (error) {
-        console.error("Error al cargar centros:", error);
-      }
-    };
-
-    fetchCenters();
-  }, []);
-
-  useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        const response = await getCountry();
-        setCountryCurrencies(response.data);
-      } catch (error) {
-        console.error("Error al cargar países:", error);
-      }
-    };
-
-    fetchCountries();
-  }, []);
-
-    useEffect(() => {
-      const fetchSectors = async () => {
-        try {
-          const response = await getSector();
-          setSectorCurrencies(response.data);
-        } catch (error) {
-          console.error("Error al cargar sectores:", error);
-        }
-      };
-
-      fetchSectors();
-  }, []);
 
   // Efecto para cargar los datos iniciales
   useEffect(() => {
@@ -155,6 +97,14 @@ export default function BasicTextFields({ initialData }) {
           onChange={handleChange}
         />
         <TextField
+          name="ci"
+          label="Carnet de identidad"
+          variant="outlined"
+          className="customTextField"
+          value={formData.ci}
+          onChange={handleChange}
+        />
+        <TextField
           name="sexo"
           select
           label="Sexo"
@@ -178,7 +128,7 @@ export default function BasicTextFields({ initialData }) {
           className="customTextField"
           onChange={handleChange}
         >
-          {areaCurrencies.map((option) => (
+          {areas.map((option) => (
             <MenuItem key={option.nombre} value={option.idarea}>
               {option.nombre}
             </MenuItem>
@@ -193,7 +143,7 @@ export default function BasicTextFields({ initialData }) {
           className="customTextField"
           onChange={handleChange}
         >
-          {countryCurrencies.map((option) => (
+          {countries.map((option) => (
             <MenuItem key={option.nombre} value={option.idpais}>
               {option.nombre}
             </MenuItem>
@@ -208,7 +158,7 @@ export default function BasicTextFields({ initialData }) {
           className="customTextField"
           onChange={handleChange}
         >
-          {centerCurrencies.map((option) => (
+          {centers.map((option) => (
             <MenuItem key={option.nombre} value={option.idcentro}>
               {option.nombre}
             </MenuItem>
@@ -223,7 +173,7 @@ export default function BasicTextFields({ initialData }) {
           className="customTextField"
           onChange={handleChange}
         >
-          {sectorCurrencies.map((option) => (
+          {sectors.map((option) => (
             <MenuItem key={option.nombre} value={option.idsectorest}>
               {option.nombre}
             </MenuItem>
