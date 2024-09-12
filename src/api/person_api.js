@@ -27,15 +27,15 @@ export const deletePerson = (id) => {
     //     }
     // };
     console.log("Metodo deletePerson")
-    return axios.delete('http://127.0.0.1:8000/persona/personas/', id)
+    return axios.delete(`http://127.0.0.1:8000/persona/personas/${id}/`)
 }
 
-export const putPerson = (person) => {
+export const putPerson = (person, id) => {
     // const config = {
     //     headers: {
     //         'Authorization': 'Bearer ' + tokenAccess
     //     }
     // };
     console.log("Metodo putPerson")
-    return axios.put('http://127.0.0.1:8000/persona/personas/', person)
+    return axios.put(`http://127.0.0.1:8000/persona/personas/${id}/`, person)
 }

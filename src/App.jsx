@@ -4,7 +4,11 @@ import Home from "./pages/home/Home"
 import Login from "./pages/login/Login"
 import Register from "./pages/register/Register"
 import Area from "./pages/area/Area"
+import AreaCreate from "./pages/area/AreaCreate"
+import AreaUpdate from "./pages/area/AreaUpdate"
 import Knowledge_Area from "./pages/knowledge_area/Knowledge_area"
+import Knowledge_AreaCreate from "./pages/knowledge_area/Knowledge_areaCreate"
+import Knowledge_AreaUpdate from "./pages/knowledge_area/Knowledge_areaUpdate"
 import Center from "./pages/center/Center"
 import Doctor from "./pages/doctor/Doctor"
 import Doctoral_Student from "./pages/doctoral_student/Doctoral_student"
@@ -36,12 +40,16 @@ function App() {
                 <Route path="/login/" element={<Login />} />
                 <Route path="/register/" element={<Register />} />
                 <Route path="/area/" element={<Area />} />
+                <Route path="/area/crear/" element={<AreaCreate />} />
+                <Route path="/area/modificar/" element={<AreaUpdate />} />
                 <Route path="/areadeconocimiento/" element={<Knowledge_Area />} />
+                <Route path="/areadeconocimiento/crear/" element={<Knowledge_AreaCreate />} />
+                <Route path="/areadeconocimiento/modificar/" element={<Knowledge_AreaUpdate />} />
                 <Route path="/centro/" element={<Center />} />
                 <Route path="/doctor/" element={<Doctor />} />
                 <Route path="/doctorando/" element={<Doctoral_Student />} />
                 <Route path="/pais/" element={<Country />} />
-                <Route path="/persona" element={<Person />} />
+                <Route path="/persona/" element={<Person />} />
                 <Route path="/persona/crear/" element={<PersonCreate />} />
                 <Route path="/persona/modificar/" element={<PersonUpdate />} />
                 <Route path="/programa/" element={<Program />} />

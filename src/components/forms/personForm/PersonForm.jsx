@@ -7,7 +7,7 @@ import { Button } from '@mui/material';
 import "./personForm.css";
 import { DataContext } from '../../../dataContext/dataContext';
 import { useContext } from 'react';
-
+import { postPerson, putPerson } from '../../../api/person_api';
 // Opciones para los campos
 const sexo_currencies = [
   { value: 'Masculino', label: 'M' },
@@ -28,6 +28,7 @@ export default function BasicTextFields({ initialData }) {
 
   const [formData, setFormData] = useState(initialFormData);
   const { areas, centers, countries, sectors } = useContext(DataContext);
+  const { refreshPerson } = useContext(DataContext);
   const navigate = useNavigate();
 
   // Efecto para cargar los datos iniciales
@@ -45,20 +46,22 @@ export default function BasicTextFields({ initialData }) {
     });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (initialData) {
       // Lógica para modificar el registro
       console.log("Modificar:", formData);
+      console.log("ID:", formData.idpersona);
+      putPerson(formData, formData.idpersona);
     } else {
       // Lógica para crear un nuevo registro
       console.log("Crear:", formData);
+      postPerson(formData)
     }
 
     setFormData(initialFormData); // Restablecer el formulario
     navigate(-1);
-    // Aquí puedes agregar la lógica para enviar los datos a tu API
   };
 
   const handleCancel = () => {

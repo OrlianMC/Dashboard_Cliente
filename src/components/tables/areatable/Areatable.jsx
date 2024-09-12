@@ -26,9 +26,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
-import { DataContext } from '../../dataContext/dataContext';
-import { useContext } from 'react';
-import './persontable.css';
+import { deleteArea, getArea } from '../../../api/area_api';
+import './areatable.css';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -59,16 +58,8 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: 'idpersona', numeric: false, disablePadding: false, label: 'ID' },
+  { id: 'idarea', numeric: false, disablePadding: false, label: 'ID' },
   { id: 'nombre', numeric: false, disablePadding: false, label: 'Nombre' },
-  { id: 'apellido', numeric: false, disablePadding: false, label: 'Apellidos' },
-  { id: 'ci', numeric: false, disablePadding: false, label: 'CI' },
-  { id: 'sexo', numeric: false, disablePadding: false, label: 'Sexo' },
-  { id: 'plantillaarea_idarea', numeric: false, disablePadding: false, label: 'Plantilla' },
-  { id: 'pais_idpais', numeric: false, disablePadding: false, label: 'País' },
-  { id: 'centro_idcentro', numeric: false, disablePadding: false, label: 'Centro' },
-  { id: 'sectorest_idsectorest', numeric: false, disablePadding: false, label: 'Sector Estratégico' },
-  { id: 'edicion', numeric: false, disablePadding: false, label: 'Edición' },
 ];
 
 function EnhancedTableHead(props) {
@@ -152,14 +143,14 @@ function EnhancedTableToolbar(props) {
           Personas
           <div className="search">
             <input
-                type="text"
-                className="input"
-                placeholder="Búsqueda"
-                value={searchTerm}
-                onChange={handleSearch}
+              type="text"
+              className="input"
+              placeholder="Búsqueda"
+              value={searchTerm}
+              onChange={handleSearch}
             />
             <IconButton>
-                <SearchIcon />
+              <SearchIcon />
             </IconButton>
           </div>
         </Typography>
@@ -200,59 +191,19 @@ export default function EnhancedTable() {
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
   const navigate = useNavigate();
-  const { areas, centers, countries, sectors, persons } = useContext(DataContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Crear los objetos de mapeo
-        const newPlantillaAreaMap = {};
-        areas.forEach(area => {
-          newPlantillaAreaMap[area.idarea] = area.nombre;
-        });
-
-        const newPaisMap = {};
-        countries.forEach(country => {
-          newPaisMap[country.idpais] = country.nombre;
-        });
-
-        const newCentroMap = {};
-        centers.forEach(center => {
-          newCentroMap[center.idcentro] = center.nombre;
-        });
-
-        const newSectorEstMap = {};
-        sectors.forEach(sector => {
-          newSectorEstMap[sector.idsectorest] = sector.nombre;
-        });
-
-        // Mapear los datos de las personas
-        const mappedData = persons.map(person => ({
-          ...person,
-          originalData: {
-            nombre: person.nombre,
-            apellido: person.apellido,
-            ci: person.ci,
-            sexo: person.sexo,
-            sectorest_idsectorest: person.sectorest_idsectorest,
-            centro_idcentro: person.centro_idcentro,
-            pais_idpais: person.pais_idpais,
-            plantillaarea_idarea: person.plantillaarea_idarea,
-          },
-          plantillaarea_idarea: newPlantillaAreaMap[person.plantillaarea_idarea] || person.plantillaarea_idarea,
-          pais_idpais: newPaisMap[person.pais_idpais] || person.pais_idpais,
-          centro_idcentro: newCentroMap[person.centro_idcentro] || person.centro_idcentro,
-          sectorest_idsectorest: newSectorEstMap[person.sectorest_idsectorest] || person.sectorest_idsectorest,
-        }));
-
-        setRows(mappedData);
+        const mappedData = await getArea();
+        setRows(mappedData.data);
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       }
     };
 
     fetchData();
-  }, [areas, centers, countries, persons, sectors]);
+  }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -262,19 +213,19 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.idpersona);
+      const newSelected = rows.map((n) => n.idarea);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, idpersona) => {
-    const selectedIndex = selected.indexOf(idpersona);
+  const handleClick = (event, idarea) => {
+    const selectedIndex = selected.indexOf(idarea);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, idpersona);
+      newSelected = newSelected.concat(selected, idarea);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -288,13 +239,24 @@ export default function EnhancedTable() {
     setSelected(newSelected);
   };
 
-  const handleDelete = () => {
-    console.log("Eliminar:", selected);
+  const handleDelete = async () => {
+    if (window.confirm("¿Estás seguro de que deseas eliminar los elementos seleccionados?")) {
+      try {
+        await Promise.all(selected.map(item => deleteArea(item)));
+        const updatedRows = rows.filter(row => !selected.includes(row.idarea));
+        setRows(updatedRows);
+        setSelected([]);
+        setSearchTerm('');
+      } catch (error) {
+        console.error("Error al eliminar elementos:", error);
+        alert("Error al eliminar. Intenta de nuevo más tarde.");
+      }
+    }
   };
 
   const handleEdit = (row) => {
     console.log('Editando fila:', row);
-    navigate(`/persona/modificar/`, { state: { row } });
+    navigate(`/area/modificar/`, { state: { row } });
   };
 
   const handleChangePage = (event, newPage) => {
@@ -315,13 +277,7 @@ export default function EnhancedTable() {
   };
 
   const filteredRows = rows.filter((row) =>
-    row.nombre.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    row.apellido.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    row.ci.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    row.plantillaarea_idarea.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    row.pais_idpais.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    row.centro_idcentro.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    row.sectorest_idsectorest.toLowerCase().includes(searchTerm.toLowerCase())
+    row.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const visibleRows = React.useMemo(
@@ -360,17 +316,17 @@ export default function EnhancedTable() {
             />
             <TableBody>
               {visibleRows.map((row, index) => {
-                const isItemSelected = selected.indexOf(row.idpersona) !== -1;
+                const isItemSelected = selected.indexOf(row.idarea) !== -1;
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.idpersona)}
+                    onClick={(event) => handleClick(event, row.idarea)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.idpersona}
+                    key={row.idarea}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
@@ -382,23 +338,16 @@ export default function EnhancedTable() {
                       />
                     </TableCell>
                     <TableCell component="th" id={labelId} scope="row" padding="normal">
-                      {row.idpersona}
+                      {row.idarea}
                     </TableCell>
                     <TableCell align="left">{row.nombre}</TableCell>
-                    <TableCell align="left">{row.apellido}</TableCell>
-                    <TableCell align="left">{row.ci}</TableCell>
-                    <TableCell align="left">{row.sexo}</TableCell>
-                    <TableCell align="left">{row.plantillaarea_idarea}</TableCell>
-                    <TableCell align="left">{row.pais_idpais}</TableCell>
-                    <TableCell align="left">{row.centro_idcentro}</TableCell>
-                    <TableCell align="left">{row.sectorest_idsectorest}</TableCell>
                     <TableCell align="center">
                       <Button
                         variant="contained"
                         color="inherit"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleEdit(row.originalData);
+                          handleEdit(row); // .originalData
                         }}
                         sx={{ minWidth: 'auto', padding: '6px' }}
                       >

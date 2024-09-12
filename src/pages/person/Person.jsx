@@ -1,7 +1,7 @@
 // import React, { useNavigate } from 'react'
 import { useNavigate } from 'react-router-dom';
 import "./person.css"
-import PersonTable from "../../components/persontable/Persontable"
+import PersonTable from "../../components/tables/persontable/Persontable"
 import AddIcon from '@mui/icons-material/Add';
 import { Button } from '@mui/material';
 
