@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import { DataContext } from '../../../dataContext/dataContext';
-import { useContext } from 'react';
 import { postKnowledge_area, putKnowledge_area } from '../../../api/knowledge_area_api';
 import "./knowledge_areaForm.css";
 
@@ -14,7 +13,7 @@ export default function BasicTextFields({ initialData }) {
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const { refreshKnowledge_area } = useContext(DataContext);
+  const { loadData, setLoadData } = useContext(DataContext);
   const navigate = useNavigate();
 
   // Efecto para cargar los datos iniciales
@@ -44,8 +43,8 @@ export default function BasicTextFields({ initialData }) {
       console.log("Crear:", formData);
       postKnowledge_area(formData)
     }
-
     setFormData(initialFormData); // Restablecer el formulario
+    setLoadData(!loadData);
     navigate(-1);
   };
 

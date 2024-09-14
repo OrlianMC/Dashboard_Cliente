@@ -3,17 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
-import { postArea, putArea } from '../../../api/area_api';
+import { postCenter, putCenter } from '../../../api/center_api';
 import { DataContext } from '../../../dataContext/dataContext';
-import "./areaForm.css";
+import "./centerForm.css";
 
 export default function BasicTextFields({ initialData }) {
   const initialFormData = {
     nombre: '',
+    organismo: '',
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const { setLoadData, loadData } = useContext(DataContext);
+  const { loadData, setLoadData } = useContext(DataContext);
   const navigate = useNavigate();
 
   // Efecto para cargar los datos iniciales
@@ -37,11 +38,11 @@ export default function BasicTextFields({ initialData }) {
     if (initialData) {
       // Lógica para modificar el registro
       console.log("Modificar:", formData);
-      putArea(formData, formData.idarea);
+      putCenter(formData, formData.idcentro);
     } else {
       // Lógica para crear un nuevo registro
       console.log("Crear:", formData);
-      postArea(formData)
+      postCenter(formData);
     }
     setFormData(initialFormData); // Restablecer el formulario
     setLoadData(!loadData);
@@ -53,7 +54,7 @@ export default function BasicTextFields({ initialData }) {
   };
 
   return (
-    <div className='areacreateContainer'>
+    <div className='centercreateContainer'>
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -73,6 +74,14 @@ export default function BasicTextFields({ initialData }) {
           variant="outlined"
           className="customTextField"
           value={formData.nombre}
+          onChange={handleChange}
+        />
+        <TextField
+          name="organismo"
+          label="Organismo"
+          variant="outlined"
+          className="customTextField"
+          value={formData.organismo}
           onChange={handleChange}
         />
         <div className='buttomContainer'>

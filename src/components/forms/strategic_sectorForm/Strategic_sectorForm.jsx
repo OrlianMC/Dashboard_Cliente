@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
-import { postArea, putArea } from '../../../api/area_api';
+import { postSector, putSector } from '../../../api/sector_api';
 import { DataContext } from '../../../dataContext/dataContext';
-import "./areaForm.css";
+import "./strategic_sectorForm.css";
 
 export default function BasicTextFields({ initialData }) {
   const initialFormData = {
@@ -13,7 +13,7 @@ export default function BasicTextFields({ initialData }) {
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const { setLoadData, loadData } = useContext(DataContext);
+  const { loadData, setLoadData } = useContext(DataContext);
   const navigate = useNavigate();
 
   // Efecto para cargar los datos iniciales
@@ -37,11 +37,11 @@ export default function BasicTextFields({ initialData }) {
     if (initialData) {
       // Lógica para modificar el registro
       console.log("Modificar:", formData);
-      putArea(formData, formData.idarea);
+      putSector(formData, formData.idsectorest);
     } else {
       // Lógica para crear un nuevo registro
       console.log("Crear:", formData);
-      postArea(formData)
+      postSector(formData)
     }
     setFormData(initialFormData); // Restablecer el formulario
     setLoadData(!loadData);
@@ -53,7 +53,7 @@ export default function BasicTextFields({ initialData }) {
   };
 
   return (
-    <div className='areacreateContainer'>
+    <div className='strategic_sectorcreateContainer'>
       <Box
         component="form"
         onSubmit={handleSubmit}

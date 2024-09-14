@@ -17,7 +17,7 @@ export const postSector = (sector) => {
     //     }
     // };
     console.log("Metodo postSector")
-    return axios.post('http://127.0.0.1:8000/persona/personas/', sector)
+    return axios.post('http://127.0.0.1:8000/sectorest/sectores/', sector)
 }
 
 export const deleteSector = (id) => {
@@ -27,7 +27,7 @@ export const deleteSector = (id) => {
     //     }
     // };
     console.log("Metodo deleteSector")
-    return axios.delete(`http://127.0.0.1:8000/persona/personas/${id}/`)
+    return axios.delete(`http://127.0.0.1:8000/sectorest/sectores/${id}/`)
 }
 
 export const putSector = (sector, id) => {
@@ -37,5 +37,5 @@ export const putSector = (sector, id) => {
     //     }
     // };
     console.log("Metodo putSector")
-    return axios.put(`http://127.0.0.1:8000/persona/personas/${id}/`, sector)
+    return axios.put(`http://127.0.0.1:8000/sectorest/sectores/${id}/`, sector)
 }

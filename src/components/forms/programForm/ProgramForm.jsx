@@ -4,29 +4,29 @@ import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
-import "./personForm.css";
 import { DataContext } from '../../../dataContext/dataContext';
-import { postPerson, putPerson } from '../../../api/person_api';
+import { postProgram, putProgram } from '../../../api/program_api';
+import "./programForm.css";
+
 // Opciones para los campos
-const sexo_currencies = [
-  { value: 'Masculino', label: 'M' },
-  { value: 'Femenino', label: 'F' },
+const boolean_currencies = [
+  { value: true, label: 'Si' },
+  { value: false, label: 'No' },
 ];
 
 export default function BasicTextFields({ initialData }) {
   const initialFormData = {
     nombre: '',
-    apellido: '',
-    ci: '',
-    sexo: '',
-    plantillaarea_idarea: '',
-    pais_idpais: '',
-    centro_idcentro: '',
-    sectorest_idsectorest: '',
+    sectorest: '',
+    desarrollolocal: '',
+    adistancia: '',
+    estdesarrollomun: '',
+    area_idarea: '',
+    areadeconocimiento_idareadeconocimiento: '',
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const { areas, centers, countries, sectors } = useContext(DataContext);
+  const { areas, knowledge_areas } = useContext(DataContext);
   const { loadData, setLoadData } = useContext(DataContext);
   const navigate = useNavigate();
 
@@ -51,12 +51,12 @@ export default function BasicTextFields({ initialData }) {
     if (initialData) {
       // Lógica para modificar el registro
       console.log("Modificar:", formData);
-      console.log("ID:", formData.idpersona);
-      putPerson(formData, formData.idpersona);
+      console.log("ID:", formData.idprograma);
+      putProgram(formData, formData.idprograma);
     } else {
       // Lógica para crear un nuevo registro
       console.log("Crear:", formData);
-      postPerson(formData)
+      postProgram(formData)
     }
     setFormData(initialFormData); // Restablecer el formulario
     setLoadData(!loadData);
@@ -91,41 +91,70 @@ export default function BasicTextFields({ initialData }) {
           onChange={handleChange}
         />
         <TextField
-          name="apellido"
-          label="Apellido"
-          variant="outlined"
-          className="customTextField"
-          value={formData.apellido}
-          onChange={handleChange}
-        />
-        <TextField
-          name="ci"
-          label="Carnet de identidad"
-          variant="outlined"
-          className="customTextField"
-          value={formData.ci}
-          onChange={handleChange}
-        />
-        <TextField
-          name="sexo"
+          name="sectorest"
           select
-          label="Sexo"
-          value={formData.sexo}
-          helperText="Seleccione el sexo"
+          label="Sector Estratégico"
+          value={formData.sectorest}
+          helperText="Seleccione la opción deseada"
           className="customTextField"
           onChange={handleChange}
         >
-          {sexo_currencies.map((option) => (
+          {boolean_currencies.map((option) => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}
             </MenuItem>
           ))}
         </TextField>
         <TextField
-          name="plantillaarea_idarea"
+          name="desarrollolocal"
+          select
+          label="Desarrollo Local"
+          value={formData.desarrollolocal}
+          helperText="Seleccione la opción deseada"
+          className="customTextField"
+          onChange={handleChange}
+        >
+          {boolean_currencies.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          name="adistancia"
+          select
+          label="Distancia"
+          value={formData.adistancia}
+          helperText="Seleccione la opción deseada"
+          className="customTextField"
+          onChange={handleChange}
+        >
+          {boolean_currencies.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          name="estdesarrollomun"
+          select
+          label="Desarrollo Municipal"
+          value={formData.estdesarrollomun}
+          helperText="Seleccione la opción deseada"
+          className="customTextField"
+          onChange={handleChange}
+        >
+          {boolean_currencies.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          name="area_idarea"
           select
           label="Área"
-          value={formData.plantillaarea_idarea}
+          value={formData.area_idarea}
           helperText="Seleccione el área"
           className="customTextField"
           onChange={handleChange}
@@ -137,46 +166,16 @@ export default function BasicTextFields({ initialData }) {
           ))}
         </TextField>
         <TextField
-          name="pais_idpais"
+          name="areadeconocimiento_idareadeconocimiento"
           select
-          label="País"
-          value={formData.pais_idpais}
+          label="Área de Conocimiento"
+          value={formData.areadeconocimiento_idareadeconocimiento}
           helperText="Seleccione el país"
           className="customTextField"
           onChange={handleChange}
         >
-          {countries.map((option) => (
-            <MenuItem key={option.nombre} value={option.idpais}>
-              {option.nombre}
-            </MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          name="centro_idcentro"
-          select
-          label="Centro"
-          value={formData.centro_idcentro}
-          helperText="Seleccione el centro"
-          className="customTextField"
-          onChange={handleChange}
-        >
-          {centers.map((option) => (
-            <MenuItem key={option.nombre} value={option.idcentro}>
-              {option.nombre}
-            </MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          name="sectorest_idsectorest"
-          select
-          label="Sector Estratégico"
-          value={formData.sectorest_idsectorest}
-          helperText="Seleccione el sector estratégico"
-          className="customTextField"
-          onChange={handleChange}
-        >
-          {sectors.map((option) => (
-            <MenuItem key={option.nombre} value={option.idsectorest}>
+          {knowledge_areas.map((option) => (
+            <MenuItem key={option.nombre} value={option.idareadeconocimiento}>
               {option.nombre}
             </MenuItem>
           ))}

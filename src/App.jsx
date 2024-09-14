@@ -10,20 +10,28 @@ import Knowledge_Area from "./pages/knowledge_area/Knowledge_area"
 import Knowledge_AreaCreate from "./pages/knowledge_area/Knowledge_areaCreate"
 import Knowledge_AreaUpdate from "./pages/knowledge_area/Knowledge_areaUpdate"
 import Center from "./pages/center/Center"
+import CenterCreate from "./pages/center/CenterCreate"
+import CenterUpdate from "./pages/center/CenterUpdate"
 import Doctor from "./pages/doctor/Doctor"
 import Doctoral_Student from "./pages/doctoral_student/Doctoral_student"
 import Country from "./pages/country/Country"
+import CountryCreate from "./pages/country/CountryCreate"
+import CountryUpdate from "./pages/country/CountryUpdate"
 import Person from "./pages/person/Person"
 import PersonCreate from "./pages/person/PersonCreate"
 import PersonUpdate from "./pages/person/PersonUpdate"
 import Program from "./pages/program/Program"
+import ProgramCreate from "./pages/program/ProgramCreate"
+import ProgramUpdate from "./pages/program/ProgramUpdate"
 import Strategic_Sector from "./pages/strategic_sector/Strategic_sector"
+import Strategic_SectorCreate from "./pages/strategic_sector/Strategic_sectorCreate"
+import Strategic_SectorUpdate from "./pages/strategic_sector/Strategic_sectorUpdate"
 import Tutor from "./pages/tutor/Tutor"
-import "./App.css"
 import Sidebar from "./components/sidebar/Sidebar";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
 import { DataProvider } from "./dataContext/dataContext";
+import "./App.css"
 
 function App() {
 
@@ -46,14 +54,22 @@ function App() {
                 <Route path="/areadeconocimiento/crear/" element={<Knowledge_AreaCreate />} />
                 <Route path="/areadeconocimiento/modificar/" element={<Knowledge_AreaUpdate />} />
                 <Route path="/centro/" element={<Center />} />
+                <Route path="/centro/crear/" element={<CenterCreate />} />
+                <Route path="/centro/modificar/" element={<CenterUpdate />} />
                 <Route path="/doctor/" element={<Doctor />} />
                 <Route path="/doctorando/" element={<Doctoral_Student />} />
                 <Route path="/pais/" element={<Country />} />
+                <Route path="/pais/crear/" element={<CountryCreate />} />
+                <Route path="/pais/modificar/" element={<CountryUpdate />} />
                 <Route path="/persona/" element={<Person />} />
                 <Route path="/persona/crear/" element={<PersonCreate />} />
                 <Route path="/persona/modificar/" element={<PersonUpdate />} />
                 <Route path="/programa/" element={<Program />} />
+                <Route path="/programa/crear/" element={<ProgramCreate />} />
+                <Route path="/programa/modificar/" element={<ProgramUpdate />} />
                 <Route path="/sectorest/" element={<Strategic_Sector />} />
+                <Route path="/sectorest/crear/" element={<Strategic_SectorCreate />} />
+                <Route path="/sectorest/modificar/" element={<Strategic_SectorUpdate />} />
                 <Route path="/tutor/" element={<Tutor />} />
               </Routes>
             </div>

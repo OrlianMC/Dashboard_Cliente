@@ -1,6 +1,6 @@
 import React from 'react'
 import "./personcreate.css"
-import PersonaForm from "../../components/forms/personForm/PersonForm"
+import PersonForm from "../../components/forms/personForm/PersonForm"
 
 const PersonCreate = () => {
     return (
@@ -9,7 +9,7 @@ const PersonCreate = () => {
                 <h1 className="title">Añadir Persona:</h1>
             </div>
             <div className="form">
-                <PersonaForm />
+                <PersonForm />
             </div>
         </div>
     )

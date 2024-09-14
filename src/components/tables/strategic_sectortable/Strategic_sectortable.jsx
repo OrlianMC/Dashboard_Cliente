@@ -26,9 +26,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
-import { deleteArea, getArea } from '../../../api/area_api';
+import { getSector, deleteSector } from '../../../api/sector_api' 
 import { DataContext } from '../../../dataContext/dataContext';
-import './areatable.css';
+import './strategic_sectortable.css';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -59,7 +59,7 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: 'idarea', numeric: false, disablePadding: false, label: 'ID' },
+  { id: 'idsectorest', numeric: false, disablePadding: false, label: 'ID' },
   { id: 'nombre', numeric: false, disablePadding: false, label: 'Nombre' },
 ];
 
@@ -141,7 +141,7 @@ function EnhancedTableToolbar(props) {
           justifyContent={'space-between'}
           marginRight={'10px'}
         >
-          Áreas
+          Sectores Estratégicos
           <div className="search">
             <input
               type="text"
@@ -191,22 +191,21 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
-  const { areas, loadData, setLoadData } = useContext(DataContext);
+  const { loadData, setLoadData } = useContext(DataContext); 
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const mappedData = await getArea();
-        // setRows(mappedData.data);
-        setRows(areas);
+        const mappedData = await getSector();
+        setRows(mappedData.data);
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       }
     };
 
     fetchData();
-  }, [areas]);
+  }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -216,19 +215,19 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.idarea);
+      const newSelected = rows.map((n) => n.idsectorest);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, idarea) => {
-    const selectedIndex = selected.indexOf(idarea);
+  const handleClick = (event, idsectorest) => {
+    const selectedIndex = selected.indexOf(idsectorest);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, idarea);
+      newSelected = newSelected.concat(selected, idsectorest);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -245,8 +244,8 @@ export default function EnhancedTable() {
   const handleDelete = async () => {
     if (window.confirm("¿Estás seguro de que deseas eliminar los elementos seleccionados?")) {
       try {
-        await Promise.all(selected.map(item => deleteArea(item)));
-        const updatedRows = rows.filter(row => !selected.includes(row.idarea));
+        await Promise.all(selected.map(item => deleteSector(item)));
+        const updatedRows = rows.filter(row => !selected.includes(row.idsectorest));
         setRows(updatedRows);
         setLoadData(!loadData);
         setSelected([]);
@@ -260,7 +259,7 @@ export default function EnhancedTable() {
 
   const handleEdit = (row) => {
     console.log('Editando fila:', row);
-    navigate(`/area/modificar/`, { state: { row } });
+    navigate(`/sectorest/modificar/`, { state: { row } });
   };
 
   const handleChangePage = (event, newPage) => {
@@ -320,17 +319,17 @@ export default function EnhancedTable() {
             />
             <TableBody>
               {visibleRows.map((row, index) => {
-                const isItemSelected = selected.indexOf(row.idarea) !== -1;
+                const isItemSelected = selected.indexOf(row.idsectorest) !== -1;
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.idarea)}
+                    onClick={(event) => handleClick(event, row.idsectorest)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.idarea}
+                    key={row.idsectorest}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
@@ -342,7 +341,7 @@ export default function EnhancedTable() {
                       />
                     </TableCell>
                     <TableCell component="th" id={labelId} scope="row" padding="normal">
-                      {row.idarea}
+                      {row.idsectorest}
                     </TableCell>
                     <TableCell align="left">{row.nombre}</TableCell>
                     <TableCell align="center">

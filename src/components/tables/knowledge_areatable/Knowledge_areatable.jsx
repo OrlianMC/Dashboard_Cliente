@@ -23,10 +23,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import { Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import { deleteKnowledge_area, getKnowledge_area } from '../../../api/knowledge_area_api';
+import { DataContext } from '../../../dataContext/dataContext';
 import './knowledge_areatable.css';
 
 function descendingComparator(a, b, orderBy) {
@@ -140,7 +141,7 @@ function EnhancedTableToolbar(props) {
           justifyContent={'space-between'}
           marginRight={'10px'}
         >
-          Personas
+          Áreas de Conocimiento
           <div className="search">
             <input
               type="text"
@@ -190,20 +191,22 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
+  const { knowledge_areas, loadData, setLoadData } = useContext(DataContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const mappedData = await getKnowledge_area();
-        setRows(mappedData.data);
+        // const mappedData = await getKnowledge_area();
+        // setRows(mappedData.data);
+        setRows(knowledge_areas);
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [knowledge_areas]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -245,6 +248,7 @@ export default function EnhancedTable() {
         await Promise.all(selected.map(item => deleteKnowledge_area(item)));
         const updatedRows = rows.filter(row => !selected.includes(row.idareadeconocimiento));
         setRows(updatedRows);
+        setLoadData(!loadData);
         setSelected([]);
         setSearchTerm('');
       } catch (error) {

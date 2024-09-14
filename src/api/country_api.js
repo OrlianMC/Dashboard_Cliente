@@ -6,7 +6,7 @@ export const getCountry = () => {
     //         'Authorization': 'Bearer ' + tokenAccess
     //     }
     // };
-    console.log("Metodo getPais")
+    console.log("Metodo getCountry")
     return axios.get('http://127.0.0.1:8000/pais/paises/')
 }
 

@@ -23,12 +23,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import { Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
-import { deleteArea, getArea } from '../../../api/area_api';
 import { DataContext } from '../../../dataContext/dataContext';
-import './areatable.css';
+import { useContext } from 'react';
+import { deleteProgram } from '../../../api/program_api';
+import './programtable.css';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -59,8 +60,14 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: 'idarea', numeric: false, disablePadding: false, label: 'ID' },
+  { id: 'idprograma', numeric: false, disablePadding: false, label: 'ID' },
   { id: 'nombre', numeric: false, disablePadding: false, label: 'Nombre' },
+  { id: 'sectorest', numeric: false, disablePadding: false, label: 'Sector Estratégico' },
+  { id: 'desarrollolocal', numeric: false, disablePadding: false, label: 'Desarrollo Local' },
+  { id: 'adistancia', numeric: false, disablePadding: false, label: 'Distancia' },
+  { id: 'estdesarrollomun', numeric: false, disablePadding: false, label: 'Desarrollo Municipal' },
+  { id: 'area_idarea', numeric: false, disablePadding: false, label: 'Área' },
+  { id: 'areadeconocimiento_idareadeconocimiento', numeric: false, disablePadding: false, label: 'Área de Conocimiento' },
 ];
 
 function EnhancedTableHead(props) {
@@ -141,7 +148,7 @@ function EnhancedTableToolbar(props) {
           justifyContent={'space-between'}
           marginRight={'10px'}
         >
-          Áreas
+          Programas
           <div className="search">
             <input
               type="text"
@@ -191,22 +198,22 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
-  const { areas, loadData, setLoadData } = useContext(DataContext);
   const navigate = useNavigate();
+  const { programs, areas, knowledge_areas, loadData, setLoadData } = useContext(DataContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const mappedData = await getArea();
-        // setRows(mappedData.data);
-        setRows(areas);
+        // const personData = await getPerson();
+        // setRows(personData.data);
+        setRows(programs);
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       }
     };
 
     fetchData();
-  }, [areas]);
+  }, [programs]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -216,19 +223,19 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.idarea);
+      const newSelected = rows.map((n) => n.idprograma);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, idarea) => {
-    const selectedIndex = selected.indexOf(idarea);
+  const handleClick = (event, idprograma) => {
+    const selectedIndex = selected.indexOf(idprograma);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, idarea);
+      newSelected = newSelected.concat(selected, idprograma);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -245,8 +252,8 @@ export default function EnhancedTable() {
   const handleDelete = async () => {
     if (window.confirm("¿Estás seguro de que deseas eliminar los elementos seleccionados?")) {
       try {
-        await Promise.all(selected.map(item => deleteArea(item)));
-        const updatedRows = rows.filter(row => !selected.includes(row.idarea));
+        await Promise.all(selected.map(item => deleteProgram(item)));
+        const updatedRows = rows.filter(row => !selected.includes(row.idprograma));
         setRows(updatedRows);
         setLoadData(!loadData);
         setSelected([]);
@@ -260,7 +267,7 @@ export default function EnhancedTable() {
 
   const handleEdit = (row) => {
     console.log('Editando fila:', row);
-    navigate(`/area/modificar/`, { state: { row } });
+    navigate(`/programa/modificar/`, { state: { row } });
   };
 
   const handleChangePage = (event, newPage) => {
@@ -282,7 +289,7 @@ export default function EnhancedTable() {
 
   const filteredRows = rows.filter((row) =>
     row.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+);
 
   const visibleRows = React.useMemo(
     () =>
@@ -320,17 +327,17 @@ export default function EnhancedTable() {
             />
             <TableBody>
               {visibleRows.map((row, index) => {
-                const isItemSelected = selected.indexOf(row.idarea) !== -1;
+                const isItemSelected = selected.indexOf(row.idprograma) !== -1;
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.idarea)}
+                    onClick={(event) => handleClick(event, row.idprograma)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.idarea}
+                    key={row.idprograma}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
@@ -342,9 +349,15 @@ export default function EnhancedTable() {
                       />
                     </TableCell>
                     <TableCell component="th" id={labelId} scope="row" padding="normal">
-                      {row.idarea}
+                      {row.idprograma}
                     </TableCell>
                     <TableCell align="left">{row.nombre}</TableCell>
+                    <TableCell align="left">{row.sectorest ? 'Si' : 'No'}</TableCell>
+                    <TableCell align="left">{row.desarrollolocal ? 'Si' : 'No' }</TableCell>
+                    <TableCell align="left">{row.adistancia ? 'Si' : 'No'}</TableCell>
+                    <TableCell align="left">{row.estdesarrollomun ? 'Si' : 'No'}</TableCell>
+                    <TableCell align="left">{areas.find(area => area.idarea === row.area_idarea)?.nombre || 'N/A'}</TableCell>
+                    <TableCell align="left">{knowledge_areas.find(knowledge_area => knowledge_area.idareadeconocimiento === row.areadeconocimiento_idareadeconocimiento)?.nombre || 'N/A'}</TableCell>
                     <TableCell align="center">
                       <Button
                         variant="contained"

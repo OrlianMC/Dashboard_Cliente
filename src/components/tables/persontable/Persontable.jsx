@@ -201,20 +201,21 @@ export default function EnhancedTable() {
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
   const navigate = useNavigate();
-  const { areas, centers, countries, sectors } = useContext(DataContext);
+  const { areas, centers, countries, sectors, persons, loadData, setLoadData } = useContext(DataContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const personData = await getPerson();
-        setRows(personData.data);
+        // const personData = await getPerson();
+        // setRows(personData.data);
+        setRows(persons);
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [persons]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -256,6 +257,7 @@ export default function EnhancedTable() {
         await Promise.all(selected.map(item => deletePerson(item)));
         const updatedRows = rows.filter(row => !selected.includes(row.idpersona));
         setRows(updatedRows);
+        setLoadData(!loadData);
         setSelected([]);
         setSearchTerm('');
       } catch (error) {
