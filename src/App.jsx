@@ -1,5 +1,5 @@
 import React from "react";
-import { createBrowserRouter, RouterProvider, BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/home/Home"
 import Login from "./pages/login/Login"
 import Register from "./pages/register/Register"
@@ -13,7 +13,11 @@ import Center from "./pages/center/Center"
 import CenterCreate from "./pages/center/CenterCreate"
 import CenterUpdate from "./pages/center/CenterUpdate"
 import Doctor from "./pages/doctor/Doctor"
+import DoctorCreate from "./pages/doctor/DoctorCreate"
+import DoctorUpdate from "./pages/doctor/DoctorUpdate"
 import Doctoral_Student from "./pages/doctoral_student/Doctoral_student"
+import Doctoral_StudentCreate from "./pages/doctoral_student/Doctoral_studentCreate"
+import Doctoral_StudentUpdate from "./pages/doctoral_student/Doctoral_studentUpdate"
 import Country from "./pages/country/Country"
 import CountryCreate from "./pages/country/CountryCreate"
 import CountryUpdate from "./pages/country/CountryUpdate"
@@ -27,6 +31,8 @@ import Strategic_Sector from "./pages/strategic_sector/Strategic_sector"
 import Strategic_SectorCreate from "./pages/strategic_sector/Strategic_sectorCreate"
 import Strategic_SectorUpdate from "./pages/strategic_sector/Strategic_sectorUpdate"
 import Tutor from "./pages/tutor/Tutor"
+import TutorCreate from "./pages/tutor/TutorCreate"
+import TutorUpdate from "./pages/tutor/TutorUpdate"
 import Sidebar from "./components/sidebar/Sidebar";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
@@ -57,7 +63,11 @@ function App() {
                 <Route path="/centro/crear/" element={<CenterCreate />} />
                 <Route path="/centro/modificar/" element={<CenterUpdate />} />
                 <Route path="/doctor/" element={<Doctor />} />
+                <Route path="/doctor/crear/" element={<DoctorCreate />} />
+                <Route path="/doctor/modificar/" element={<DoctorUpdate />} />
                 <Route path="/doctorando/" element={<Doctoral_Student />} />
+                <Route path="/doctorando/crear/" element={<Doctoral_StudentCreate />} />
+                <Route path="/doctorando/modificar/" element={<Doctoral_StudentUpdate />} />
                 <Route path="/pais/" element={<Country />} />
                 <Route path="/pais/crear/" element={<CountryCreate />} />
                 <Route path="/pais/modificar/" element={<CountryUpdate />} />
@@ -71,6 +81,8 @@ function App() {
                 <Route path="/sectorest/crear/" element={<Strategic_SectorCreate />} />
                 <Route path="/sectorest/modificar/" element={<Strategic_SectorUpdate />} />
                 <Route path="/tutor/" element={<Tutor />} />
+                <Route path="/tutor/crear/" element={<TutorCreate />} />
+                <Route path="/tutor/modificar/" element={<TutorUpdate />} />
               </Routes>
             </div>
           </div>

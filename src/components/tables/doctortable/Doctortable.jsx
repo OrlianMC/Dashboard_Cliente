@@ -23,13 +23,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import { Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import { DataContext } from '../../../dataContext/dataContext';
-import { useContext } from 'react';
-import { deleteProgram } from '../../../api/program_api';
-import './programtable.css';
+import { deleteDoctor } from '../../../api/doctor_api';
+import './doctortable.css';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -60,14 +59,9 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: 'idprograma', numeric: false, disablePadding: false, label: 'ID' },
-  { id: 'nombre', numeric: false, disablePadding: false, label: 'Nombre' },
-  { id: 'sectorest', numeric: false, disablePadding: false, label: 'Sector Estratégico' },
-  { id: 'desarrollolocal', numeric: false, disablePadding: false, label: 'Desarrollo Local' },
-  { id: 'adistancia', numeric: false, disablePadding: false, label: 'Distancia' },
-  { id: 'estdesarrollomun', numeric: false, disablePadding: false, label: 'Desarrollo Municipal' },
-  { id: 'area_idarea', numeric: false, disablePadding: false, label: 'Área' },
-  { id: 'areadeconocimiento_idareadeconocimiento', numeric: false, disablePadding: false, label: 'Área de Conocimiento' },
+  { id: 'iddoctor', numeric: false, disablePadding: false, label: 'ID' },
+  { id: 'persona_idpersona', numeric: false, disablePadding: false, label: 'Persona' },
+  { id: 'facultadarea_idarea', numeric: false, disablePadding: false, label: 'Facultad Área' },
   { id: 'edicion', numeric: false, disablePadding: false, label: 'Edición' },
 ];
 
@@ -149,7 +143,7 @@ function EnhancedTableToolbar(props) {
           justifyContent={'space-between'}
           marginRight={'10px'}
         >
-          Programas
+          Doctores
           <div className="search">
             <input
               type="text"
@@ -200,21 +194,21 @@ export default function EnhancedTable() {
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
   const navigate = useNavigate();
-  const { programs, areas, knowledge_areas, loadData, setLoadData } = useContext(DataContext);
+  const { areas, persons, doctors, loadData, setLoadData } = useContext(DataContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const personData = await getPerson();
-        // setRows(personData.data);
-        setRows(programs);
+        // const doctorData = await getDoctor();
+        // setRows(doctorData.data);
+        setRows(doctors);
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       }
     };
 
     fetchData();
-  }, [programs]);
+  }, [doctors]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -224,19 +218,19 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.idprograma);
+      const newSelected = rows.map((n) => n.iddoctor);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, idprograma) => {
-    const selectedIndex = selected.indexOf(idprograma);
+  const handleClick = (event, iddoctor) => {
+    const selectedIndex = selected.indexOf(iddoctor);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, idprograma);
+      newSelected = newSelected.concat(selected, iddoctor);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -253,8 +247,8 @@ export default function EnhancedTable() {
   const handleDelete = async () => {
     if (window.confirm("¿Estás seguro de que deseas eliminar los elementos seleccionados?")) {
       try {
-        await Promise.all(selected.map(item => deleteProgram(item)));
-        const updatedRows = rows.filter(row => !selected.includes(row.idprograma));
+        await Promise.all(selected.map(item => deleteDoctor(item)));
+        const updatedRows = rows.filter(row => !selected.includes(row.iddoctor));
         setRows(updatedRows);
         setLoadData(!loadData);
         setSelected([]);
@@ -268,7 +262,7 @@ export default function EnhancedTable() {
 
   const handleEdit = (row) => {
     console.log('Editando fila:', row);
-    navigate(`/programa/modificar/`, { state: { row } });
+    navigate(`/doctor/modificar/`, { state: { row } });
   };
 
   const handleChangePage = (event, newPage) => {
@@ -289,10 +283,10 @@ export default function EnhancedTable() {
   };
 
   const filteredRows = rows.filter((row) =>
-    row.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (areas.find(area => area.idarea === row.area_idarea)?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (knowledge_areas.find(knowledge_area => knowledge_area.idareadeconocimiento === row.areadeconocimiento_idareadeconocimiento)?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase())
-);
+    String(row.iddoctor).toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (persons.find(person => person.idpersona === row.persona_idpersona)?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (areas.find(area => area.idarea === row.facultadarea_idarea)?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const visibleRows = React.useMemo(
     () =>
@@ -330,17 +324,17 @@ export default function EnhancedTable() {
             />
             <TableBody>
               {visibleRows.map((row, index) => {
-                const isItemSelected = selected.indexOf(row.idprograma) !== -1;
+                const isItemSelected = selected.indexOf(row.iddoctor) !== -1;
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.idprograma)}
+                    onClick={(event) => handleClick(event, row.iddoctor)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.idprograma}
+                    key={row.iddoctor}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
@@ -352,15 +346,10 @@ export default function EnhancedTable() {
                       />
                     </TableCell>
                     <TableCell component="th" id={labelId} scope="row" padding="normal">
-                      {row.idprograma}
+                      {row.iddoctor}
                     </TableCell>
-                    <TableCell align="left">{row.nombre}</TableCell>
-                    <TableCell align="left">{row.sectorest ? 'Si' : 'No'}</TableCell>
-                    <TableCell align="left">{row.desarrollolocal ? 'Si' : 'No' }</TableCell>
-                    <TableCell align="left">{row.adistancia ? 'Si' : 'No'}</TableCell>
-                    <TableCell align="left">{row.estdesarrollomun ? 'Si' : 'No'}</TableCell>
-                    <TableCell align="left">{areas.find(area => area.idarea === row.area_idarea)?.nombre || 'N/A'}</TableCell>
-                    <TableCell align="left">{knowledge_areas.find(knowledge_area => knowledge_area.idareadeconocimiento === row.areadeconocimiento_idareadeconocimiento)?.nombre || 'N/A'}</TableCell>
+                    <TableCell align="left">{persons.find(person => person.idpersona === row.persona_idpersona)?.nombre || 'N/A'}</TableCell>
+                    <TableCell align="left">{areas.find(area => area.idarea === row.facultadarea_idarea)?.nombre || 'N/A'}</TableCell>
                     <TableCell align="center">
                       <Button
                         variant="contained"

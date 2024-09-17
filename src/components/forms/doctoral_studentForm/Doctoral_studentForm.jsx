@@ -5,8 +5,8 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import { DataContext } from '../../../dataContext/dataContext';
-import { postProgram, putProgram } from '../../../api/program_api';
-import "./programForm.css";
+import { postDoctoral_student, putDoctoral_student } from '../../../api/doctoral_student_api';
+import "./doctoral_studentForm.css";
 
 // Opciones para los campos
 const boolean_currencies = [
@@ -16,18 +16,20 @@ const boolean_currencies = [
 
 export default function BasicTextFields({ initialData }) {
   const initialFormData = {
-    nombre: '',
-    sectorest: '',
+    fdefensa: '',
+    fingreso: '',
+    temadetesis: '',
+    fingles: '',
+    fespecialidad: '',
     desarrollolocal: '',
-    adistancia: '',
-    estdesarrollomun: '',
-    area_idarea: '',
-    areadeconocimiento_idareadeconocimiento: '',
+    persona_idpersona: '',
+    facultadarea_idarea: '',
+    programa_idprograma: '',
+    sectorest_idsectorest: '',
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const { areas, knowledge_areas } = useContext(DataContext);
-  const { loadData, setLoadData } = useContext(DataContext);
+  const { areas, persons, programs, sectors, loadData, setLoadData } = useContext(DataContext);
   const navigate = useNavigate();
 
   // Efecto para cargar los datos iniciales
@@ -51,12 +53,12 @@ export default function BasicTextFields({ initialData }) {
     if (initialData) {
       // Lógica para modificar el registro
       console.log("Modificar:", formData);
-      console.log("ID:", formData.idprograma);
-      putProgram(formData, formData.idprograma);
+      console.log("ID:", formData.iddoctorando);
+      putDoctoral_student(formData, formData.iddoctorando);
     } else {
       // Lógica para crear un nuevo registro
       console.log("Crear:", formData);
-      postProgram(formData)
+      postDoctoral_student(formData)
     }
     setFormData(initialFormData); // Restablecer el formulario
     setLoadData(!loadData);
@@ -68,7 +70,7 @@ export default function BasicTextFields({ initialData }) {
   };
 
   return (
-    <div className='programcreateContainer'>
+    <div className='doctoral_studentcreateContainer'>
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -83,28 +85,45 @@ export default function BasicTextFields({ initialData }) {
         autoComplete="on"
       >
         <TextField
-          name="nombre"
-          label="Nombre"
+          name="fdefensa"
+          label="Fecha de Defensa"
           variant="outlined"
           className="customTextField"
-          value={formData.nombre}
+          value={formData.fdefensa}
           onChange={handleChange}
         />
         <TextField
-          name="sectorest"
-          select
-          label="Sector Estratégico"
-          value={formData.sectorest}
-          helperText="Seleccione la opción deseada"
+          name="fingreso"
+          label="Fecha de Ingreso"
+          variant="outlined"
           className="customTextField"
+          value={formData.fingreso}
           onChange={handleChange}
-        >
-          {boolean_currencies.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
+        />
+        <TextField
+          name="temadetesis"
+          label="Tema de Tesis"
+          variant="outlined"
+          className="customTextField"
+          value={formData.temadetesis}
+          onChange={handleChange}
+        />
+        <TextField
+          name="fingles"
+          label="Fecha de Inglés"
+          variant="outlined"
+          className="customTextField"
+          value={formData.fingles}
+          onChange={handleChange}
+        />
+        <TextField
+          name="fespecialidad"
+          label="Fecha de Especialidad"
+          variant="outlined"
+          className="customTextField"
+          value={formData.fespecialidad}
+          onChange={handleChange}
+        />
         <TextField
           name="desarrollolocal"
           select
@@ -121,40 +140,25 @@ export default function BasicTextFields({ initialData }) {
           ))}
         </TextField>
         <TextField
-          name="adistancia"
+          name="persona_idpersona"
           select
-          label="Distancia"
-          value={formData.adistancia}
-          helperText="Seleccione la opción deseada"
+          label="Persona"
+          value={formData.persona_idpersona}
+          helperText="Seleccione el país"
           className="customTextField"
           onChange={handleChange}
         >
-          {boolean_currencies.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
+          {persons.map((option) => (
+            <MenuItem key={option.nombre} value={option.idpersona}>
+              {option.nombre}
             </MenuItem>
           ))}
         </TextField>
         <TextField
-          name="estdesarrollomun"
+          name="facultadarea_idarea"
           select
-          label="Desarrollo Municipal"
-          value={formData.estdesarrollomun}
-          helperText="Seleccione la opción deseada"
-          className="customTextField"
-          onChange={handleChange}
-        >
-          {boolean_currencies.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          name="area_idarea"
-          select
-          label="Área"
-          value={formData.area_idarea}
+          label="Facultad Área"
+          value={formData.facultadarea_idarea}
           helperText="Seleccione el área"
           className="customTextField"
           onChange={handleChange}
@@ -166,16 +170,31 @@ export default function BasicTextFields({ initialData }) {
           ))}
         </TextField>
         <TextField
-          name="areadeconocimiento_idareadeconocimiento"
+          name="programa_idprograma"
           select
-          label="Área de Conocimiento"
-          value={formData.areadeconocimiento_idareadeconocimiento}
+          label="Programa"
+          value={formData.programa_idprograma}
           helperText="Seleccione el país"
           className="customTextField"
           onChange={handleChange}
         >
-          {knowledge_areas.map((option) => (
-            <MenuItem key={option.nombre} value={option.idareadeconocimiento}>
+          {programs.map((option) => (
+            <MenuItem key={option.nombre} value={option.idprograma}>
+              {option.nombre}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          name="sectorest_idsectorest"
+          select
+          label="Sector Estratégico"
+          value={formData.sectorest_idsectorest}
+          helperText="Seleccione el sector estratégico"
+          className="customTextField"
+          onChange={handleChange}
+        >
+          {sectors.map((option) => (
+            <MenuItem key={option.nombre} value={option.idsectorest}>
               {option.nombre}
             </MenuItem>
           ))}

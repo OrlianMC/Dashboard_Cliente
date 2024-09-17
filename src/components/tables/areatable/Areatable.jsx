@@ -61,6 +61,7 @@ function stableSort(array, comparator) {
 const headCells = [
   { id: 'idarea', numeric: false, disablePadding: false, label: 'ID' },
   { id: 'nombre', numeric: false, disablePadding: false, label: 'Nombre' },
+  { id: 'edicion', numeric: false, disablePadding: false, label: 'Edición' },
 ];
 
 function EnhancedTableHead(props) {

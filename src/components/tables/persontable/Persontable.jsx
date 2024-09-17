@@ -29,7 +29,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { DataContext } from '../../../dataContext/dataContext';
 import { useContext } from 'react';
 import './persontable.css';
-import { deletePerson, getPerson } from '../../../api/person_api';
+import { deletePerson } from '../../../api/person_api';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -292,119 +292,119 @@ export default function EnhancedTable() {
   const filteredRows = rows.filter((row) =>
     row.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
     row.apellido.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    row.ci.toLowerCase().includes(searchTerm.toLowerCase()) // ||
-    // row.plantillaarea_idarea.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    // row.pais_idpais.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    // row.centro_idcentro.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    // row.sectorest_idsectorest.toLowerCase().includes(searchTerm.toLowerCase())
+    row.ci.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (areas.find(area => area.idarea === row.plantillaarea_idarea)?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (countries.find(country => country.idpais === row.pais_idpais)?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (centers.find(center => center.idcentro === row.centro_idcentro)?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (sectors.find(sector => sector.idsectorest === row.sectorest_idsectorest)?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const visibleRows = React.useMemo(
-    () =>
-      stableSort(filteredRows, getComparator(order, orderBy)).slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage,
-      ),
-    [order, orderBy, page, rowsPerPage, filteredRows],
-  );
+const visibleRows = React.useMemo(
+  () =>
+    stableSort(filteredRows, getComparator(order, orderBy)).slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage,
+    ),
+  [order, orderBy, page, rowsPerPage, filteredRows],
+);
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
+const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
 
-  return (
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar
-          numSelected={selected.length}
-          onDelete={handleDelete}
-          searchTerm={searchTerm}
-          handleSearch={handleSearch}
-        />
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
-          >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={filteredRows.length}
-            />
-            <TableBody>
-              {visibleRows.map((row, index) => {
-                const isItemSelected = selected.indexOf(row.idpersona) !== -1;
-                const labelId = `enhanced-table-checkbox-${index}`;
-
-                return (
-                  <TableRow
-                    hover
-                    onClick={(event) => handleClick(event, row.idpersona)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.idpersona}
-                    selected={isItemSelected}
-                    sx={{ cursor: 'pointer' }}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{ 'aria-labelledby': labelId }}
-                      />
-                    </TableCell>
-                    <TableCell component="th" id={labelId} scope="row" padding="normal">
-                      {row.idpersona}
-                    </TableCell>
-                    <TableCell align="left">{row.nombre}</TableCell>
-                    <TableCell align="left">{row.apellido}</TableCell>
-                    <TableCell align="left">{row.ci}</TableCell>
-                    <TableCell align="left">{row.sexo}</TableCell>
-                    <TableCell align="left">{areas.find(area => area.idarea === row.plantillaarea_idarea)?.nombre || 'N/A'}</TableCell>
-                    <TableCell align="left">{countries.find(country => country.idpais === row.pais_idpais)?.nombre || 'N/A'}</TableCell>
-                    <TableCell align="left">{centers.find(center => center.idcentro === row.centro_idcentro)?.nombre || 'N/A'}</TableCell>
-                    <TableCell align="left">{sectors.find(sector => sector.idsectorest === row.sectorest_idsectorest)?.nombre || 'N/A'}</TableCell>
-                    <TableCell align="center">
-                      <Button
-                        variant="contained"
-                        color="inherit"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleEdit(row); // .originalData
-                        }}
-                        sx={{ minWidth: 'auto', padding: '6px' }}
-                      >
-                        <EditIcon />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={filteredRows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Densidad de relleno"
+return (
+  <Box sx={{ width: '100%' }}>
+    <Paper sx={{ width: '100%', mb: 2 }}>
+      <EnhancedTableToolbar
+        numSelected={selected.length}
+        onDelete={handleDelete}
+        searchTerm={searchTerm}
+        handleSearch={handleSearch}
       />
-    </Box>
-  );
+      <TableContainer>
+        <Table
+          sx={{ minWidth: 750 }}
+          aria-labelledby="tableTitle"
+          size={dense ? 'small' : 'medium'}
+        >
+          <EnhancedTableHead
+            numSelected={selected.length}
+            order={order}
+            orderBy={orderBy}
+            onSelectAllClick={handleSelectAllClick}
+            onRequestSort={handleRequestSort}
+            rowCount={filteredRows.length}
+          />
+          <TableBody>
+            {visibleRows.map((row, index) => {
+              const isItemSelected = selected.indexOf(row.idpersona) !== -1;
+              const labelId = `enhanced-table-checkbox-${index}`;
+
+              return (
+                <TableRow
+                  hover
+                  onClick={(event) => handleClick(event, row.idpersona)}
+                  role="checkbox"
+                  aria-checked={isItemSelected}
+                  tabIndex={-1}
+                  key={row.idpersona}
+                  selected={isItemSelected}
+                  sx={{ cursor: 'pointer' }}
+                >
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      color="primary"
+                      checked={isItemSelected}
+                      inputProps={{ 'aria-labelledby': labelId }}
+                    />
+                  </TableCell>
+                  <TableCell component="th" id={labelId} scope="row" padding="normal">
+                    {row.idpersona}
+                  </TableCell>
+                  <TableCell align="left">{row.nombre}</TableCell>
+                  <TableCell align="left">{row.apellido}</TableCell>
+                  <TableCell align="left">{row.ci}</TableCell>
+                  <TableCell align="left">{row.sexo}</TableCell>
+                  <TableCell align="left">{areas.find(area => area.idarea === row.plantillaarea_idarea)?.nombre || 'N/A'}</TableCell>
+                  <TableCell align="left">{countries.find(country => country.idpais === row.pais_idpais)?.nombre || 'N/A'}</TableCell>
+                  <TableCell align="left">{centers.find(center => center.idcentro === row.centro_idcentro)?.nombre || 'N/A'}</TableCell>
+                  <TableCell align="left">{sectors.find(sector => sector.idsectorest === row.sectorest_idsectorest)?.nombre || 'N/A'}</TableCell>
+                  <TableCell align="center">
+                    <Button
+                      variant="contained"
+                      color="inherit"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(row); // .originalData
+                      }}
+                      sx={{ minWidth: 'auto', padding: '6px' }}
+                    >
+                      <EditIcon />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={filteredRows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+    </Paper>
+    <FormControlLabel
+      control={<Switch checked={dense} onChange={handleChangeDense} />}
+      label="Densidad de relleno"
+    />
+  </Box>
+);
 }

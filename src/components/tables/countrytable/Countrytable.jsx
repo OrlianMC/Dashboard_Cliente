@@ -62,6 +62,7 @@ const headCells = [
     { id: 'idpais', numeric: false, disablePadding: false, label: 'ID' },
     { id: 'nombre', numeric: false, disablePadding: false, label: 'Nombre' },
     { id: 'codigo', numeric: false, disablePadding: false, label: 'Código' },
+    { id: 'edicion', numeric: false, disablePadding: false, label: 'Edición' },
 ];
 
 function EnhancedTableHead(props) {
