@@ -27,10 +27,8 @@ import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import { DataContext } from '../../../dataContext/dataContext';
-import { deleteDoctor, getDoctor } from '../../../api/doctor_api';
-import { getArea } from '../../../api/area_api'; 
-import { getPerson } from '../../../api/person_api'; 
-import './doctortable.css';
+import './registertable.css';
+import { deleteUser, getUser } from '../../../api/user_api';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -61,9 +59,11 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: 'iddoctor', numeric: false, disablePadding: false, label: 'ID' },
-  { id: 'persona_idpersona', numeric: false, disablePadding: false, label: 'Persona' },
-  { id: 'facultadarea_idarea', numeric: false, disablePadding: false, label: 'Facultad Área' },
+  { id: 'id', numeric: false, disablePadding: false, label: 'ID' },
+  { id: 'username', numeric: false, disablePadding: false, label: 'Nombre de usuario' },
+  { id: 'email', numeric: false, disablePadding: false, label: 'Correo' },
+  { id: 'is_admin', numeric: false, disablePadding: false, label: 'Administrador' },
+  { id: 'is_manager', numeric: false, disablePadding: false, label: 'Gerente' },
   { id: 'edicion', numeric: false, disablePadding: false, label: 'Edición' },
 ];
 
@@ -145,7 +145,7 @@ function EnhancedTableToolbar(props) {
           justifyContent={'space-between'}
           marginRight={'10px'}
         >
-          Doctores
+          Usuarios
           <div className="search">
             <input
               type="text"
@@ -195,35 +195,21 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
-  const { areas, setAreas, persons, setPersons, setDoctors, loadDoctor, setLoadDoctor } = useContext(DataContext);
+  const { token, loadUser, setLoadUser } = useContext(DataContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const mappedData = await getDoctor();
-        setDoctors(mappedData.data);
+        const mappedData = await getUser(token);
         setRows(mappedData.data);
-
-        const fetchIfNeeded = async (fetchFunction, setter, currentData) => {
-          if (currentData.length === 0) {
-            const data = await fetchFunction();
-            setter(data.data);
-          }
-        };
-  
-        await Promise.all([
-          fetchIfNeeded(getPerson, setPersons, persons),
-          fetchIfNeeded(getArea, setAreas, areas),
-        ]);
-
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       }
     };
 
     fetchData();
-  }, [loadDoctor]);
+  }, [loadUser]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -233,19 +219,19 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.iddoctor);
+      const newSelected = rows.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, iddoctor) => {
-    const selectedIndex = selected.indexOf(iddoctor);
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, iddoctor);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -262,10 +248,10 @@ export default function EnhancedTable() {
   const handleDelete = async () => {
     if (window.confirm("¿Estás seguro de que deseas eliminar los elementos seleccionados?")) {
       try {
-        await Promise.all(selected.map(item => deleteDoctor(item)));
-        const updatedRows = rows.filter(row => !selected.includes(row.iddoctor));
+        await Promise.all(selected.map(item => deleteUser(token, item)));
+        const updatedRows = rows.filter(row => !selected.includes(row.id));
         setRows(updatedRows);
-        setLoadDoctor(!loadDoctor);
+        setLoadUser(!loadUser);
         setSelected([]);
         setSearchTerm('');
       } catch (error) {
@@ -277,7 +263,7 @@ export default function EnhancedTable() {
 
   const handleEdit = (row) => {
     console.log('Editando fila:', row);
-    navigate(`/doctor/modificar/`, { state: { row } });
+    navigate(`/register/modificar/`, { state: { row } });
   };
 
   const handleChangePage = (event, newPage) => {
@@ -298,9 +284,9 @@ export default function EnhancedTable() {
   };
 
   const filteredRows = rows.filter((row) =>
-    String(row.iddoctor).toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (persons.find(person => person.idpersona === row.persona_idpersona)?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (areas.find(area => area.idarea === row.facultadarea_idarea)?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase())
+    String(row.id).toLowerCase().includes(searchTerm.toLowerCase()) ||
+    row.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    row.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const visibleRows = React.useMemo(
@@ -339,17 +325,17 @@ export default function EnhancedTable() {
             />
             <TableBody>
               {visibleRows.map((row, index) => {
-                const isItemSelected = selected.indexOf(row.iddoctor) !== -1;
+                const isItemSelected = selected.indexOf(row.id) !== -1;
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.iddoctor)}
+                    onClick={(event) => handleClick(event, row.id)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.iddoctor}
+                    key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
@@ -361,10 +347,12 @@ export default function EnhancedTable() {
                       />
                     </TableCell>
                     <TableCell component="th" id={labelId} scope="row" padding="normal">
-                      {row.iddoctor}
+                      {row.id}
                     </TableCell>
-                    <TableCell align="left">{persons.find(person => person.idpersona === row.persona_idpersona)?.nombre || 'N/A'}</TableCell>
-                    <TableCell align="left">{areas.find(area => area.idarea === row.facultadarea_idarea)?.nombre || 'N/A'}</TableCell>
+                    <TableCell align="left">{row.username}</TableCell>
+                    <TableCell align="left">{row.email}</TableCell>
+                    <TableCell align="left">{row.is_admin ? 'Si' : 'No' }</TableCell>
+                    <TableCell align="left">{row.is_manager ? 'Si' : 'No' }</TableCell>
                     <TableCell align="center">
                       <Button
                         variant="contained"

@@ -14,7 +14,8 @@ export default function BasicTextFields({ initialData }) {
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const { loadData, setLoadData } = useContext(DataContext);
+  const [errors, setErrors] = useState({});
+  const { loadCenter, setLoadCenter } = useContext(DataContext);
   const navigate = useNavigate();
 
   // Efecto para cargar los datos iniciales
@@ -30,22 +31,48 @@ export default function BasicTextFields({ initialData }) {
       ...formData,
       [name]: value,
     });
+    setErrors({ ...errors, [name]: '' }); // Limpiar el error del campo
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.nombre) {
+      errors.nombre = "El nombre es obligatorio.";
+    } else if (formData.nombre.length < 3) {
+      errors.nombre = "El nombre debe tener al menos 3 caracteres.";
+    } else if (formData.nombre.length > 50) {
+      errors.nombre = "El nombre no puede exceder los 50 caracteres.";
+    }
+
+    if (!formData.organismo) {
+      errors.organismo = "El organismo es obligatorio.";
+    } else if (formData.organismo.length < 3) {
+      errors.organismo = "El organismo debe tener al menos 3 caracteres.";
+    } else if (formData.organismo.length > 50) {
+      errors.organismo = "El organismo no puede exceder los 50 caracteres.";
+    }
+
+    return errors;
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const validationErrors = validateForm();
+    
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return; // No enviar el formulario si hay errores
+    }
 
     if (initialData) {
-      // Lógica para modificar el registro
       console.log("Modificar:", formData);
-      putCenter(formData, formData.idcentro);
+      await putCenter(formData, formData.idcentro);
     } else {
-      // Lógica para crear un nuevo registro
       console.log("Crear:", formData);
-      postCenter(formData);
+      await postCenter(formData);
     }
     setFormData(initialFormData); // Restablecer el formulario
-    setLoadData(!loadData);
+    setLoadCenter(!loadCenter);
     navigate(-1);
   };
 
@@ -75,6 +102,8 @@ export default function BasicTextFields({ initialData }) {
           className="customTextField"
           value={formData.nombre}
           onChange={handleChange}
+          error={!!errors.nombre} // Indica que hay un error
+          helperText={errors.nombre} // Muestra el mensaje de error
         />
         <TextField
           name="organismo"
@@ -83,6 +112,8 @@ export default function BasicTextFields({ initialData }) {
           className="customTextField"
           value={formData.organismo}
           onChange={handleChange}
+          error={!!errors.organismo} // Indica que hay un error
+          helperText={errors.organismo} // Muestra el mensaje de error
         />
         <div className='buttomContainer'>
           <Button className='buttom' type="button" onClick={handleCancel}>Cancelar</Button>

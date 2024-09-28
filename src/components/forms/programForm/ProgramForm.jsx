@@ -8,9 +8,9 @@ import { DataContext } from '../../../dataContext/dataContext';
 import { postProgram, putProgram } from '../../../api/program_api';
 import "./programForm.css";
 
-// Opciones para los campos
+// Opciones para los campos booleanos
 const boolean_currencies = [
-  { value: true, label: 'Si' },
+  { value: true, label: 'Sí' },
   { value: false, label: 'No' },
 ];
 
@@ -26,8 +26,8 @@ export default function BasicTextFields({ initialData }) {
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const { areas, knowledge_areas } = useContext(DataContext);
-  const { loadData, setLoadData } = useContext(DataContext);
+  const [errors, setErrors] = useState({});
+  const { areas, knowledge_areas, loadProgram, setLoadProgram } = useContext(DataContext);
   const navigate = useNavigate();
 
   // Efecto para cargar los datos iniciales
@@ -43,24 +43,46 @@ export default function BasicTextFields({ initialData }) {
       ...formData,
       [name]: value,
     });
+    setErrors({ ...errors, [name]: '' }); // Limpiar el error del campo
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.nombre) newErrors.nombre = "El nombre es obligatorio.";
+    if (!formData.sectorest) newErrors.sectorest = "Seleccione el sector estratégico.";
+    if (!formData.desarrollolocal) newErrors.desarrollolocal = "Seleccione la opción de desarrollo local.";
+    if (!formData.adistancia) newErrors.adistancia = "Seleccione la opción de distancia.";
+    if (!formData.estdesarrollomun) newErrors.estdesarrollomun = "Seleccione la opción de desarrollo municipal.";
+    if (!formData.area_idarea) newErrors.area_idarea = "Seleccione el área.";
+    if (!formData.areadeconocimiento_idareadeconocimiento) newErrors.areadeconocimiento_idareadeconocimiento = "Seleccione el área de conocimiento.";
+
+    return newErrors;
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const validationErrors = validateForm();
 
-    if (initialData) {
-      // Lógica para modificar el registro
-      console.log("Modificar:", formData);
-      console.log("ID:", formData.idprograma);
-      putProgram(formData, formData.idprograma);
-    } else {
-      // Lógica para crear un nuevo registro
-      console.log("Crear:", formData);
-      postProgram(formData)
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return; // No enviar el formulario si hay errores
     }
-    setFormData(initialFormData); // Restablecer el formulario
-    setLoadData(!loadData);
-    navigate(-1);
+
+    try {
+      if (initialData) {
+        console.log("Modificar:", formData);
+        await putProgram(formData, formData.idprograma);
+      } else {
+        console.log("Crear:", formData);
+        await postProgram(formData);
+      }
+      setFormData(initialFormData); // Restablecer el formulario
+      setLoadProgram(!loadProgram);
+      navigate(-1);
+    } catch (error) {
+      console.error("Error al enviar el formulario:", error);
+      setErrors({ submit: "Error al enviar el formulario." });
+    }
   };
 
   const handleCancel = () => {
@@ -89,15 +111,18 @@ export default function BasicTextFields({ initialData }) {
           className="customTextField"
           value={formData.nombre}
           onChange={handleChange}
+          error={!!errors.nombre}
+          helperText={errors.nombre}
         />
         <TextField
           name="sectorest"
           select
           label="Sector Estratégico"
           value={formData.sectorest}
-          helperText="Seleccione la opción deseada"
+          helperText={errors.sectorest || "Seleccione la opción deseada"}
           className="customTextField"
           onChange={handleChange}
+          error={!!errors.sectorest}
         >
           {boolean_currencies.map((option) => (
             <MenuItem key={option.value} value={option.value}>
@@ -110,9 +135,10 @@ export default function BasicTextFields({ initialData }) {
           select
           label="Desarrollo Local"
           value={formData.desarrollolocal}
-          helperText="Seleccione la opción deseada"
+          helperText={errors.desarrollolocal || "Seleccione la opción deseada"}
           className="customTextField"
           onChange={handleChange}
+          error={!!errors.desarrollolocal}
         >
           {boolean_currencies.map((option) => (
             <MenuItem key={option.value} value={option.value}>
@@ -125,9 +151,10 @@ export default function BasicTextFields({ initialData }) {
           select
           label="Distancia"
           value={formData.adistancia}
-          helperText="Seleccione la opción deseada"
+          helperText={errors.adistancia || "Seleccione la opción deseada"}
           className="customTextField"
           onChange={handleChange}
+          error={!!errors.adistancia}
         >
           {boolean_currencies.map((option) => (
             <MenuItem key={option.value} value={option.value}>
@@ -140,9 +167,10 @@ export default function BasicTextFields({ initialData }) {
           select
           label="Desarrollo Municipal"
           value={formData.estdesarrollomun}
-          helperText="Seleccione la opción deseada"
+          helperText={errors.estdesarrollomun || "Seleccione la opción deseada"}
           className="customTextField"
           onChange={handleChange}
+          error={!!errors.estdesarrollomun}
         >
           {boolean_currencies.map((option) => (
             <MenuItem key={option.value} value={option.value}>
@@ -155,9 +183,10 @@ export default function BasicTextFields({ initialData }) {
           select
           label="Área"
           value={formData.area_idarea}
-          helperText="Seleccione el área"
+          helperText={errors.area_idarea || "Seleccione el área"}
           className="customTextField"
           onChange={handleChange}
+          error={!!errors.area_idarea}
         >
           {areas.map((option) => (
             <MenuItem key={option.nombre} value={option.idarea}>
@@ -170,9 +199,10 @@ export default function BasicTextFields({ initialData }) {
           select
           label="Área de Conocimiento"
           value={formData.areadeconocimiento_idareadeconocimiento}
-          helperText="Seleccione el país"
+          helperText={errors.areadeconocimiento_idareadeconocimiento || "Seleccione el área de conocimiento"}
           className="customTextField"
           onChange={handleChange}
+          error={!!errors.areadeconocimiento_idareadeconocimiento}
         >
           {knowledge_areas.map((option) => (
             <MenuItem key={option.nombre} value={option.idareadeconocimiento}>

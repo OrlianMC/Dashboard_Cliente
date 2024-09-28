@@ -192,22 +192,22 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
-  const { knowledge_areas, loadData, setLoadData } = useContext(DataContext);
+  const { setKnowledge_areas, loadKnowledge_Area, setLoadKnowledge_Area} = useContext(DataContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const mappedData = await getKnowledge_area();
-        // setRows(mappedData.data);
-        setRows(knowledge_areas);
+        const mappedData = await getKnowledge_area();
+        setKnowledge_areas(mappedData.data);
+        setRows(mappedData.data);
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       }
     };
 
     fetchData();
-  }, [knowledge_areas]);
+  }, [loadKnowledge_Area]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -249,7 +249,7 @@ export default function EnhancedTable() {
         await Promise.all(selected.map(item => deleteKnowledge_area(item)));
         const updatedRows = rows.filter(row => !selected.includes(row.idareadeconocimiento));
         setRows(updatedRows);
-        setLoadData(!loadData);
+        setLoadKnowledge_Area(!loadKnowledge_Area);
         setSelected([]);
         setSearchTerm('');
       } catch (error) {
@@ -305,7 +305,7 @@ export default function EnhancedTable() {
           searchTerm={searchTerm}
           handleSearch={handleSearch}
         />
-        <TableContainer>
+        <TableContainer sx={{ maxHeight: 500, maxWidth:1200, overflowX: 'auto' }}>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"

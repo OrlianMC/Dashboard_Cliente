@@ -13,7 +13,8 @@ export default function BasicTextFields({ initialData }) {
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const { loadData, setLoadData } = useContext(DataContext);
+  const [errors, setErrors] = useState({});
+  const { loadSector, setLoadSector } = useContext(DataContext);
   const navigate = useNavigate();
 
   // Efecto para cargar los datos iniciales
@@ -29,23 +30,39 @@ export default function BasicTextFields({ initialData }) {
       ...formData,
       [name]: value,
     });
+    setErrors({ ...errors, [name]: '' }); // Limpiar el error del campo
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.nombre) newErrors.nombre = "El nombre es obligatorio.";
+    return newErrors;
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const validationErrors = validateForm();
 
-    if (initialData) {
-      // Lógica para modificar el registro
-      console.log("Modificar:", formData);
-      putSector(formData, formData.idsectorest);
-    } else {
-      // Lógica para crear un nuevo registro
-      console.log("Crear:", formData);
-      postSector(formData)
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return; // No enviar el formulario si hay errores
     }
-    setFormData(initialFormData); // Restablecer el formulario
-    setLoadData(!loadData);
-    navigate(-1);
+
+    try {
+      if (initialData) {
+        console.log("Modificar:", formData);
+        await putSector(formData, formData.idsectorest);
+      } else {
+        console.log("Crear:", formData);
+        await postSector(formData);
+      }
+      setFormData(initialFormData); // Restablecer el formulario
+      setLoadSector(!loadSector);
+      navigate(-1);
+    } catch (error) {
+      console.error("Error al enviar el formulario:", error);
+      setErrors({ submit: "Error al enviar el formulario." });
+    }
   };
 
   const handleCancel = () => {
@@ -74,6 +91,8 @@ export default function BasicTextFields({ initialData }) {
           className="customTextField"
           value={formData.nombre}
           onChange={handleChange}
+          error={!!errors.nombre}
+          helperText={errors.nombre}
         />
         <div className='buttomContainer'>
           <Button className='buttom' type="button" onClick={handleCancel}>Cancelar</Button>

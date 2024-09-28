@@ -28,8 +28,12 @@ import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import { DataContext } from '../../../dataContext/dataContext';
 import { useContext } from 'react';
+import { deletePerson, getPerson } from '../../../api/person_api';
+import { getArea } from '../../../api/area_api';
+import { getCenter } from '../../../api/center_api';
+import { getSector } from '../../../api/sector_api';
+import { getCountry } from '../../../api/country_api';
 import './persontable.css';
-import { deletePerson } from '../../../api/person_api';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -200,22 +204,37 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
+  const { areas, setAreas, centers, setCenters, countries, setCountries, sectors, setSectors, setPersons, loadPerson, setLoadPerson } = useContext(DataContext);
   const navigate = useNavigate();
-  const { areas, centers, countries, sectors, persons, loadData, setLoadData } = useContext(DataContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const personData = await getPerson();
-        // setRows(personData.data);
-        setRows(persons);
+        const mappedData = await getPerson();
+        setPersons(mappedData.data);
+        setRows(mappedData.data);
+
+        const fetchIfNeeded = async (fetchFunction, setter, currentData) => {
+          if (currentData.length === 0) {
+            const data = await fetchFunction();
+            setter(data.data);
+          }
+        };
+  
+        await Promise.all([
+          fetchIfNeeded(getCenter, setCenters, centers),
+          fetchIfNeeded(getCountry, setCountries, countries),
+          fetchIfNeeded(getSector, setSectors, sectors),
+          fetchIfNeeded(getArea, setAreas, areas),
+        ]);
+
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       }
     };
 
     fetchData();
-  }, [persons]);
+  }, [loadPerson]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -257,7 +276,7 @@ export default function EnhancedTable() {
         await Promise.all(selected.map(item => deletePerson(item)));
         const updatedRows = rows.filter(row => !selected.includes(row.idpersona));
         setRows(updatedRows);
-        setLoadData(!loadData);
+        setLoadPerson(!loadPerson);
         setSelected([]);
         setSearchTerm('');
       } catch (error) {
@@ -311,7 +330,7 @@ const visibleRows = React.useMemo(
 const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
 
 return (
-  <Box sx={{ width: '100%' }}>
+  <Box sx={{ width: '100%'}}>
     <Paper sx={{ width: '100%', mb: 2 }}>
       <EnhancedTableToolbar
         numSelected={selected.length}
@@ -319,7 +338,7 @@ return (
         searchTerm={searchTerm}
         handleSearch={handleSearch}
       />
-      <TableContainer>
+      <TableContainer sx={{ maxHeight: 500, maxWidth:1200, overflowX: 'auto' }}>
         <Table
           sx={{ minWidth: 750 }}
           aria-labelledby="tableTitle"

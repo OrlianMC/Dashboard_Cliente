@@ -11,6 +11,7 @@ import PublicIcon from '@mui/icons-material/Public';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
@@ -18,7 +19,7 @@ const Sidebar = () => {
     return (
         <div className='sidebar'>
             <div className='top'>
-                <span className="logo">INICIO</span>
+                <span className="logo">POSGRADO</span>
             </div>
             <hr />
             <div className='bottom'>
@@ -28,7 +29,7 @@ const Sidebar = () => {
                     <Link to="/" className="link">
                         <li className="li">
                             <DashboardIcon className="icon" />
-                            <span className="span">Dashboard</span>
+                            <span className="span">Estadísticas</span>
                         </li>
                     </Link>
 
@@ -103,7 +104,14 @@ const Sidebar = () => {
                             <span className="span">Tutor</span>
                         </li>
                     </Link>
+                    <p className="title">ADMINISTRADOR</p>
 
+                    <Link to="/register/" className="link">
+                        <li className="li">
+                            <AdminPanelSettingsIcon className="icon" />
+                            <span className="span">Usuario</span>
+                        </li>
+                    </Link>
                 </ul>
             </div>
         </div>

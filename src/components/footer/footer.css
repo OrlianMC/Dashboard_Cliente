@@ -1,5 +1,5 @@
 .footer {
-    position: absolute bottom 0;
+    
     z-index: 1000;
     background-color: lightgray;
     display: flex;
@@ -8,4 +8,13 @@
     padding: 20px;
     height: 70px;
 
+    @media (max-width: 768px) {
+        flex-direction: column;
+        left: 0;
+        right: 0;
+        height: auto;
+        width: 100%;
+        padding: 10px;
+        align-items: flex-start;
+    }
 }

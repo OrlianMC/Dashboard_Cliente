@@ -13,7 +13,8 @@ export default function BasicTextFields({ initialData }) {
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const { setLoadData, loadData } = useContext(DataContext);
+  const [errors, setErrors] = useState({});
+  const { loadArea, setLoadArea } = useContext(DataContext);
   const navigate = useNavigate();
 
   // Efecto para cargar los datos iniciales
@@ -29,22 +30,41 @@ export default function BasicTextFields({ initialData }) {
       ...formData,
       [name]: value,
     });
+    setErrors({ ...errors, [name]: '' }); // Limpiar el error del campo
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.nombre) {
+      errors.nombre = "El nombre es obligatorio.";
+    } else if (formData.nombre.length < 3) {
+      errors.nombre = "El nombre debe tener al menos 3 caracteres.";
+    } else if (formData.nombre.length > 50) {
+      errors.nombre = "El nombre no puede exceder los 50 caracteres.";
+    } else if (!/^[a-zA-Z\s]*$/.test(formData.nombre)) {
+      errors.nombre = "El nombre solo puede contener letras y espacios.";
+    }
+    return errors;
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const validationErrors = validateForm();
+    
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return; // No enviar el formulario si hay errores
+    }
 
     if (initialData) {
-      // Lógica para modificar el registro
       console.log("Modificar:", formData);
-      putArea(formData, formData.idarea);
+      await putArea(formData, formData.idarea);
     } else {
-      // Lógica para crear un nuevo registro
       console.log("Crear:", formData);
-      postArea(formData)
+      await postArea(formData);
     }
     setFormData(initialFormData); // Restablecer el formulario
-    setLoadData(!loadData);
+    setLoadArea(!loadArea);
     navigate(-1);
   };
 
@@ -65,7 +85,7 @@ export default function BasicTextFields({ initialData }) {
           alignItems: 'center',
         }}
         noValidate
-        autoComplete="on"
+        autoComplete="off"
       >
         <TextField
           name="nombre"
@@ -74,6 +94,8 @@ export default function BasicTextFields({ initialData }) {
           className="customTextField"
           value={formData.nombre}
           onChange={handleChange}
+          error={!!errors.nombre} // Indica que hay un error
+          helperText={errors.nombre} // Muestra el mensaje de error
         />
         <div className='buttomContainer'>
           <Button className='buttom' type="button" onClick={handleCancel}>Cancelar</Button>

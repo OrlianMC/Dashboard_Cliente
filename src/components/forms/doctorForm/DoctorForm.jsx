@@ -15,7 +15,8 @@ export default function BasicTextFields({ initialData }) {
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const { areas, persons, loadData, setLoadData } = useContext(DataContext);
+  const [errors, setErrors] = useState({});
+  const { areas, persons, loadDoctor, setLoadDoctor } = useContext(DataContext);
   const navigate = useNavigate();
 
   // Efecto para cargar los datos iniciales
@@ -31,23 +32,38 @@ export default function BasicTextFields({ initialData }) {
       ...formData,
       [name]: value,
     });
+    setErrors({ ...errors, [name]: '' }); // Limpiar el error del campo
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.persona_idpersona) {
+      errors.persona_idpersona = "Seleccione una persona.";
+    }
+    if (!formData.facultadarea_idarea) {
+      errors.facultadarea_idarea = "Seleccione un área.";
+    }
+    return errors;
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const validationErrors = validateForm();
+    
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return; // No enviar el formulario si hay errores
+    }
 
     if (initialData) {
-      // Lógica para modificar el registro
       console.log("Modificar:", formData);
-      console.log("ID:", formData.iddoctor);
-      putDoctor(formData, formData.iddoctor);
+      await putDoctor(formData, formData.iddoctor);
     } else {
-      // Lógica para crear un nuevo registro
       console.log("Crear:", formData);
-      postDoctor(formData)
+      await postDoctor(formData);
     }
     setFormData(initialFormData); // Restablecer el formulario
-    setLoadData(!loadData);
+    setLoadDoctor(!loadDoctor);
     navigate(-1);
   };
 
@@ -75,9 +91,10 @@ export default function BasicTextFields({ initialData }) {
           select
           label="Persona"
           value={formData.persona_idpersona}
-          helperText="Seleccione el nombre de la persona"
+          helperText={errors.persona_idpersona || "Seleccione el nombre de la persona"}
           className="customTextField"
           onChange={handleChange}
+          error={!!errors.persona_idpersona} // Indica que hay un error
         >
           {persons.map((option) => (
             <MenuItem key={option.nombre} value={option.idpersona}>
@@ -90,9 +107,10 @@ export default function BasicTextFields({ initialData }) {
           select
           label="Facultad Área"
           value={formData.facultadarea_idarea}
-          helperText="Seleccione el área"
+          helperText={errors.facultadarea_idarea || "Seleccione el área"}
           className="customTextField"
           onChange={handleChange}
+          error={!!errors.facultadarea_idarea} // Indica que hay un error
         >
           {areas.map((option) => (
             <MenuItem key={option.nombre} value={option.idarea}>

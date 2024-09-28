@@ -192,13 +192,14 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
-  const { loadData, setLoadData } = useContext(DataContext); 
+  const { setSectors, loadSector, setLoadSector } = useContext(DataContext); 
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const mappedData = await getSector();
+        setSectors(mappedData.data);
         setRows(mappedData.data);
       } catch (error) {
         console.error("Error al cargar los datos:", error);
@@ -206,7 +207,7 @@ export default function EnhancedTable() {
     };
 
     fetchData();
-  }, []);
+  }, [loadSector]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -248,7 +249,7 @@ export default function EnhancedTable() {
         await Promise.all(selected.map(item => deleteSector(item)));
         const updatedRows = rows.filter(row => !selected.includes(row.idsectorest));
         setRows(updatedRows);
-        setLoadData(!loadData);
+        setLoadSector(!loadSector);
         setSelected([]);
         setSearchTerm('');
       } catch (error) {
@@ -304,7 +305,7 @@ export default function EnhancedTable() {
           searchTerm={searchTerm}
           handleSearch={handleSearch}
         />
-        <TableContainer>
+        <TableContainer sx={{ maxHeight: 500, maxWidth:1200, overflowX: 'auto' }}>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"

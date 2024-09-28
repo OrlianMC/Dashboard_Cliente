@@ -28,7 +28,9 @@ import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import { DataContext } from '../../../dataContext/dataContext';
 import { useContext } from 'react';
-import { deleteProgram } from '../../../api/program_api';
+import { deleteProgram, getProgram } from '../../../api/program_api';
+import { getArea } from '../../../api/area_api';
+import { getKnowledge_area } from '../../../api/knowledge_area_api';
 import './programtable.css';
 
 function descendingComparator(a, b, orderBy) {
@@ -200,21 +202,34 @@ export default function EnhancedTable() {
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
   const navigate = useNavigate();
-  const { programs, areas, knowledge_areas, loadData, setLoadData } = useContext(DataContext);
+  const { areas, setAreas, knowledge_areas, setKnowledge_areas, setPrograms, loadProgram, setLoadProgram } = useContext(DataContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const personData = await getPerson();
-        // setRows(personData.data);
-        setRows(programs);
+        const mappedData = await getProgram();
+        setPrograms(mappedData.data);
+        setRows(mappedData.data);
+
+        const fetchIfNeeded = async (fetchFunction, setter, currentData) => {
+          if (currentData.length === 0) {
+            const data = await fetchFunction();
+            setter(data.data);
+          }
+        };
+  
+        await Promise.all([
+          fetchIfNeeded(getKnowledge_area, setKnowledge_areas, knowledge_areas),
+          fetchIfNeeded(getArea, setAreas, areas),
+        ]);
+
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       }
     };
 
     fetchData();
-  }, [programs]);
+  }, [loadProgram]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -256,7 +271,7 @@ export default function EnhancedTable() {
         await Promise.all(selected.map(item => deleteProgram(item)));
         const updatedRows = rows.filter(row => !selected.includes(row.idprograma));
         setRows(updatedRows);
-        setLoadData(!loadData);
+        setLoadProgram(!loadProgram);
         setSelected([]);
         setSearchTerm('');
       } catch (error) {
@@ -314,7 +329,7 @@ export default function EnhancedTable() {
           searchTerm={searchTerm}
           handleSearch={handleSearch}
         />
-        <TableContainer>
+        <TableContainer sx={{ maxHeight: 500, maxWidth:1200, overflowX: 'auto' }}>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"

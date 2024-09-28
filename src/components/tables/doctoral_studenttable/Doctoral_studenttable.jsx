@@ -19,16 +19,19 @@ import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SearchIcon from '@mui/icons-material/Search';
+import EditIcon from '@mui/icons-material/Edit';
 // import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { Button } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SearchIcon from '@mui/icons-material/Search';
 import { DataContext } from '../../../dataContext/dataContext';
-import { useContext } from 'react';
-import { deleteDoctoral_student } from '../../../api/doctoral_student_api';
+import { deleteDoctoral_student, getDoctoral_student } from '../../../api/doctoral_student_api';
+import { getPerson } from '../../../api/person_api';
+import { getSector } from '../../../api/sector_api';
+import { getProgram } from '../../../api/program_api';
+import { getArea } from '../../../api/area_api';
 import './doctoral_studenttable.css';
 
 function descendingComparator(a, b, orderBy) {
@@ -202,22 +205,38 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
+  const { persons, setPersons, sectors, setSectors, programs, setPrograms, areas, setAreas,
+    setDoctoral_students, loadDoctoral_Student, setLoadDoctoral_Student } = useContext(DataContext);
   const navigate = useNavigate();
-  const { doctoral_students, persons, sectors, programs, areas, loadData, setLoadData } = useContext(DataContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const personData = await getPerson();
-        // setRows(personData.data);
-        setRows(doctoral_students);
+        const mappedData = await getDoctoral_student();
+        setDoctoral_students(mappedData.data);
+        setRows(mappedData.data);
+
+        const fetchIfNeeded = async (fetchFunction, setter, currentData) => {
+          if (currentData.length === 0) {
+            const data = await fetchFunction();
+            setter(data.data);
+          }
+        };
+
+        await Promise.all([
+          fetchIfNeeded(getPerson, setPersons, persons),
+          fetchIfNeeded(getSector, setSectors, sectors),
+          fetchIfNeeded(getProgram, setPrograms, programs),
+          fetchIfNeeded(getArea, setAreas, areas),
+        ]);
+
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       }
     };
 
     fetchData();
-  }, [doctoral_students]);
+  }, [loadDoctoral_Student]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -259,7 +278,7 @@ export default function EnhancedTable() {
         await Promise.all(selected.map(item => deleteDoctoral_student(item)));
         const updatedRows = rows.filter(row => !selected.includes(row.iddoctorando));
         setRows(updatedRows);
-        setLoadData(!loadData);
+        setLoadDoctoral_Student(!loadDoctoral_Student);
         setSelected([]);
         setSearchTerm('');
       } catch (error) {
@@ -323,7 +342,7 @@ export default function EnhancedTable() {
           searchTerm={searchTerm}
           handleSearch={handleSearch}
         />
-        <TableContainer>
+        <TableContainer sx={{ maxHeight: 500, maxWidth: 1150, overflowX: 'auto' }}>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"

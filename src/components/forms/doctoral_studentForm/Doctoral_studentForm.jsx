@@ -29,7 +29,8 @@ export default function BasicTextFields({ initialData }) {
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const { areas, persons, programs, sectors, loadData, setLoadData } = useContext(DataContext);
+  const [errors, setErrors] = useState({});
+  const { areas, persons, programs, sectors, loadDoctoral_Student, setLoadDoctoral_Student } = useContext(DataContext);
   const navigate = useNavigate();
 
   // Efecto para cargar los datos iniciales
@@ -45,23 +46,62 @@ export default function BasicTextFields({ initialData }) {
       ...formData,
       [name]: value,
     });
+    setErrors({ ...errors, [name]: '' }); // Limpiar el error del campo
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.fdefensa) {
+      errors.fdefensa = "La fecha de defensa es obligatoria.";
+    }
+    if (!formData.fingreso) {
+      errors.fingreso = "La fecha de ingreso es obligatoria.";
+    }
+    if (!formData.temadetesis) {
+      errors.temadetesis = "El tema de tesis es obligatorio.";
+    }
+    if (!formData.fingles) {
+      errors.fingles = "La fecha de inglés es obligatoria.";
+    }
+    if (!formData.fespecialidad) {
+      errors.fespecialidad = "La fecha de especialidad es obligatoria.";
+    }
+    if (formData.desarrollolocal === '') {
+      errors.desarrollolocal = "Seleccione una opción para desarrollo local.";
+    }
+    if (!formData.persona_idpersona) {
+      errors.persona_idpersona = "Seleccione una persona.";
+    }
+    if (!formData.facultadarea_idarea) {
+      errors.facultadarea_idarea = "Seleccione una facultad o área.";
+    }
+    if (!formData.programa_idprograma) {
+      errors.programa_idprograma = "Seleccione un programa.";
+    }
+    if (!formData.sectorest_idsectorest) {
+      errors.sectorest_idsectorest = "Seleccione un sector estratégico.";
+    }
+    return errors;
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const validationErrors = validateForm();
+    
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return; // No enviar el formulario si hay errores
+    }
 
     if (initialData) {
-      // Lógica para modificar el registro
       console.log("Modificar:", formData);
-      console.log("ID:", formData.iddoctorando);
-      putDoctoral_student(formData, formData.iddoctorando);
+      await putDoctoral_student(formData, formData.iddoctorando);
     } else {
-      // Lógica para crear un nuevo registro
       console.log("Crear:", formData);
-      postDoctoral_student(formData)
+      await postDoctoral_student(formData);
     }
     setFormData(initialFormData); // Restablecer el formulario
-    setLoadData(!loadData);
+    setLoadDoctoral_Student(!loadDoctoral_Student);
     navigate(-1);
   };
 
@@ -91,6 +131,8 @@ export default function BasicTextFields({ initialData }) {
           className="customTextField"
           value={formData.fdefensa}
           onChange={handleChange}
+          error={!!errors.fdefensa}
+          helperText={errors.fdefensa}
         />
         <TextField
           name="fingreso"
@@ -99,6 +141,8 @@ export default function BasicTextFields({ initialData }) {
           className="customTextField"
           value={formData.fingreso}
           onChange={handleChange}
+          error={!!errors.fingreso}
+          helperText={errors.fingreso}
         />
         <TextField
           name="temadetesis"
@@ -107,6 +151,8 @@ export default function BasicTextFields({ initialData }) {
           className="customTextField"
           value={formData.temadetesis}
           onChange={handleChange}
+          error={!!errors.temadetesis}
+          helperText={errors.temadetesis}
         />
         <TextField
           name="fingles"
@@ -115,6 +161,8 @@ export default function BasicTextFields({ initialData }) {
           className="customTextField"
           value={formData.fingles}
           onChange={handleChange}
+          error={!!errors.fingles}
+          helperText={errors.fingles}
         />
         <TextField
           name="fespecialidad"
@@ -123,15 +171,18 @@ export default function BasicTextFields({ initialData }) {
           className="customTextField"
           value={formData.fespecialidad}
           onChange={handleChange}
+          error={!!errors.fespecialidad}
+          helperText={errors.fespecialidad}
         />
         <TextField
           name="desarrollolocal"
           select
           label="Desarrollo Local"
           value={formData.desarrollolocal}
-          helperText="Seleccione la opción deseada"
+          helperText={errors.desarrollolocal || "Seleccione la opción deseada"}
           className="customTextField"
           onChange={handleChange}
+          error={!!errors.desarrollolocal}
         >
           {boolean_currencies.map((option) => (
             <MenuItem key={option.value} value={option.value}>
@@ -144,9 +195,10 @@ export default function BasicTextFields({ initialData }) {
           select
           label="Persona"
           value={formData.persona_idpersona}
-          helperText="Seleccione el país"
+          helperText={errors.persona_idpersona || "Seleccione una persona"}
           className="customTextField"
           onChange={handleChange}
+          error={!!errors.persona_idpersona}
         >
           {persons.map((option) => (
             <MenuItem key={option.nombre} value={option.idpersona}>
@@ -159,9 +211,10 @@ export default function BasicTextFields({ initialData }) {
           select
           label="Facultad Área"
           value={formData.facultadarea_idarea}
-          helperText="Seleccione el área"
+          helperText={errors.facultadarea_idarea || "Seleccione el área"}
           className="customTextField"
           onChange={handleChange}
+          error={!!errors.facultadarea_idarea}
         >
           {areas.map((option) => (
             <MenuItem key={option.nombre} value={option.idarea}>
@@ -174,9 +227,10 @@ export default function BasicTextFields({ initialData }) {
           select
           label="Programa"
           value={formData.programa_idprograma}
-          helperText="Seleccione el país"
+          helperText={errors.programa_idprograma || "Seleccione un programa"}
           className="customTextField"
           onChange={handleChange}
+          error={!!errors.programa_idprograma}
         >
           {programs.map((option) => (
             <MenuItem key={option.nombre} value={option.idprograma}>
@@ -189,9 +243,10 @@ export default function BasicTextFields({ initialData }) {
           select
           label="Sector Estratégico"
           value={formData.sectorest_idsectorest}
-          helperText="Seleccione el sector estratégico"
+          helperText={errors.sectorest_idsectorest || "Seleccione el sector estratégico"}
           className="customTextField"
           onChange={handleChange}
+          error={!!errors.sectorest_idsectorest}
         >
           {sectors.map((option) => (
             <MenuItem key={option.nombre} value={option.idsectorest}>

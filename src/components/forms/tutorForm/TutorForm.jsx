@@ -11,11 +11,12 @@ import "./tutorForm.css";
 export default function BasicTextFields({ initialData }) {
   const initialFormData = {
     doctor_iddoctor: '',
-    doctorando_iddoctorando: ''
+    doctorando_iddoctorando: '',
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const { persons, doctors, doctoral_students, loadData, setLoadData } = useContext(DataContext);
+  const [errors, setErrors] = useState({});
+  const { persons, doctors, doctoral_students, loadTutor, setLoadTutor } = useContext(DataContext);
   const navigate = useNavigate();
 
   // Efecto para cargar los datos iniciales
@@ -31,24 +32,40 @@ export default function BasicTextFields({ initialData }) {
       ...formData,
       [name]: value,
     });
+    setErrors({ ...errors, [name]: '' }); // Limpiar el error del campo
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.doctor_iddoctor) newErrors.doctor_iddoctor = "Seleccione un doctor.";
+    if (!formData.doctorando_iddoctorando) newErrors.doctorando_iddoctorando = "Seleccione un doctorando.";
+    return newErrors;
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const validationErrors = validateForm();
 
-    if (initialData) {
-      // Lógica para modificar el registro
-      console.log("Modificar:", formData);
-      console.log("ID:", formData.idtutor);
-      putTutor(formData, formData.idtutor);
-    } else {
-      // Lógica para crear un nuevo registro
-      console.log("Crear:", formData);
-      postTutor(formData)
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return; // No enviar el formulario si hay errores
     }
-    setFormData(initialFormData); // Restablecer el formulario
-    setLoadData(!loadData);
-    navigate(-1);
+
+    try {
+      if (initialData) {
+        console.log("Modificar:", formData);
+        await putTutor(formData, formData.idtutor);
+      } else {
+        console.log("Crear:", formData);
+        await postTutor(formData);
+      }
+      setFormData(initialFormData); // Restablecer el formulario
+      setLoadTutor(!loadTutor);
+      navigate(-1);
+    } catch (error) {
+      console.error("Error al enviar el formulario:", error);
+      setErrors({ submit: "Error al enviar el formulario." });
+    }
   };
 
   const handleCancel = () => {
@@ -75,15 +92,15 @@ export default function BasicTextFields({ initialData }) {
           select
           label="Doctor"
           value={formData.doctor_iddoctor}
-          helperText="Seleccione el doctor"
+          helperText={errors.doctor_iddoctor || "Seleccione el doctor"}
           className="customTextField"
           onChange={handleChange}
+          error={!!errors.doctor_iddoctor}
         >
           {doctors.map((option) => (
             <MenuItem key={option.iddoctor} value={option.iddoctor}>
               {
-                persons.find(person => person.idpersona === option.persona_idpersona || 0)?.nombre || 'N/A'
-                // option.persona_idpersona
+                persons.find(person => person.idpersona === option.persona_idpersona)?.nombre || 'N/A'
               }
             </MenuItem>
           ))}
@@ -93,15 +110,15 @@ export default function BasicTextFields({ initialData }) {
           select
           label="Doctorando"
           value={formData.doctorando_iddoctorando}
-          helperText="Seleccione el nombre del doctorando"
+          helperText={errors.doctorando_iddoctorando || "Seleccione el nombre del doctorando"}
           className="customTextField"
           onChange={handleChange}
+          error={!!errors.doctorando_iddoctorando}
         >
           {doctoral_students.map((option) => (
             <MenuItem key={option.iddoctorando} value={option.iddoctorando}>
               {
-              persons.find(person => person.idpersona === option.persona_idpersona || 0)?.nombre || 'N/A'
-              // option.iddoctorando
+                persons.find(person => person.idpersona === option.persona_idpersona)?.nombre || 'N/A'
               }
             </MenuItem>
           ))}

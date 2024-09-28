@@ -27,7 +27,10 @@ import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import { DataContext } from '../../../dataContext/dataContext';
-import { deleteTutor } from '../../../api/tutor_api';
+import { deleteTutor, getTutor } from '../../../api/tutor_api';
+import { getDoctoral_student } from '../../../api/doctoral_student_api';
+import { getDoctor } from '../../../api/doctor_api';
+import { getPerson } from '../../../api/person_api';
 import './tutortable.css';
 
 function descendingComparator(a, b, orderBy) {
@@ -193,22 +196,36 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
+  const { persons, setPersons, doctoral_students, setDoctoral_students, doctors, setDoctors, setTutors, loadTutor, setLoadTutor } = useContext(DataContext);
   const navigate = useNavigate();
-  const { persons, doctoral_students, doctors, tutors, loadData, setLoadData } = useContext(DataContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const tutorData = await getTutor();
-        // setRows(tutorData.data);
-        setRows(tutors);
+        const mappedData = await getTutor();
+        setTutors(mappedData.data);
+        setRows(mappedData.data);
+
+        const fetchIfNeeded = async (fetchFunction, setter, currentData) => {
+          if (currentData.length === 0) {
+            const data = await fetchFunction();
+            setter(data.data);
+          }
+        };
+  
+        await Promise.all([
+          fetchIfNeeded(getPerson, setPersons, persons),
+          fetchIfNeeded(getDoctor, setDoctors, doctors),
+          fetchIfNeeded(getDoctoral_student, setDoctoral_students, doctoral_students),
+        ]);
+
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       }
     };
 
     fetchData();
-  }, [tutors]);
+  }, [loadTutor]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -250,7 +267,7 @@ export default function EnhancedTable() {
         await Promise.all(selected.map(item => deleteTutor(item)));
         const updatedRows = rows.filter(row => !selected.includes(row.idtutor));
         setRows(updatedRows);
-        setLoadData(!loadData);
+        setLoadTutor(!loadTutor);
         setSelected([]);
         setSearchTerm('');
       } catch (error) {
@@ -308,7 +325,7 @@ export default function EnhancedTable() {
           searchTerm={searchTerm}
           handleSearch={handleSearch}
         />
-        <TableContainer>
+        <TableContainer sx={{ maxHeight: 500, maxWidth:1200, overflowX: 'auto' }}>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"

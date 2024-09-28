@@ -1,22 +1,26 @@
-.knowledge_areacreateContainer {
+.registercreateContainer {
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     align-content: center;
+    
   
     .customTextField {
       & .MuiOutlinedInput-root {
         & fieldset {
           border-color: lightgray;
+          /* Cambia 'blue' por el color deseado */
         }
   
         &:hover fieldset {
           border-color: black;
+          /* Cambia el color al pasar el mouse */
         }
   
         &.Mui-focused fieldset {
           border-color: #210876;
+          /* Cambia el color cuando está enfocado */
         }
       }
     }

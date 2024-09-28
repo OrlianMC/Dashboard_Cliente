@@ -1,0 +1,73 @@
+.register {
+    display: flex;
+    background-color: whitesmoke;
+    color: #616161;
+    flex-direction: column;
+
+    .registerContainer {
+        flex: 6;
+        background-color: whitesmoke;
+        color: #616161;
+
+        .registerList {
+            -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+            box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+            padding: 20px;
+            margin: 20px;
+            overflow-x: auto;
+            /* Permite desplazamiento horizontal si es necesario */
+
+            .datatableTitle {
+                width: 100%;
+                height: auto;
+                font-size: 24px;
+                color: #616161;
+                margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                .buttom {
+                    color: black !important;
+                    background-color: lightgrey !important;
+                    box-shadow: 0 2px 4px rgba(97, 97, 97, 0.5);
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                }
+
+                .buttom:hover {
+                    background-color: whitesmoke !important;
+                    color: black !important;
+                    box-shadow: 0 4px 8px rgba(97, 97, 97, 0.5);
+                }
+
+            }
+
+            .table {
+                margin-top: 50px;
+                width: 100%;
+                overflow-x: auto;
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .register {
+        flex-direction: column;
+    }
+
+    .datatableTitle {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .buttom {
+        width: 100%;
+        margin-top: 10px;
+    }
+}

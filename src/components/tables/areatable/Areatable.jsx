@@ -192,22 +192,23 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
-  const { areas, loadData, setLoadData } = useContext(DataContext);
+  const { setAreas, loadArea, setLoadArea } = useContext(DataContext);
+  // const [loadData, setLoadData] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const mappedData = await getArea();
-        // setRows(mappedData.data);
-        setRows(areas);
+        const mappedData = await getArea();
+        setAreas(mappedData.data);
+        setRows(mappedData.data);
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       }
     };
 
     fetchData();
-  }, [areas]);
+  }, [loadArea]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -249,7 +250,7 @@ export default function EnhancedTable() {
         await Promise.all(selected.map(item => deleteArea(item)));
         const updatedRows = rows.filter(row => !selected.includes(row.idarea));
         setRows(updatedRows);
-        setLoadData(!loadData);
+        setLoadArea(!loadArea);
         setSelected([]);
         setSearchTerm('');
       } catch (error) {
@@ -305,7 +306,7 @@ export default function EnhancedTable() {
           searchTerm={searchTerm}
           handleSearch={handleSearch}
         />
-        <TableContainer>
+        <TableContainer sx={{ maxHeight: 500, maxWidth:1200, overflowX: 'auto' }}>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"

@@ -15,31 +15,10 @@
         padding: 20px;
     }
 
-    .search {
-        display: flex;
-        width: 30%;
-        align-items: center;
-        padding: 3px;
-        border: 0.5px solid lightgray;
-
-        input {
-            width: 100%;
-            border: none;
-            outline: none;
-            background: transparent;
-
-            &::placeholder {
-                font-size: 12px;
-                padding-left: 5px;
-
-            }
-        }
-    }
-
     .items {
         display: flex;
         align-items: center;
-        margin-left: 75%;
+        margin-left: auto; /* Cambia a auto para que se alinee correctamente */
 
         .item {
             display: flex;
@@ -47,7 +26,7 @@
             margin-right: 20px;
 
             span {
-               padding-left: 5px;
+                padding-left: 5px;
             }
         }
 
@@ -55,6 +34,36 @@
             font-size: 25px;
             cursor: pointer;
         }
+    }
+}
 
+@media (max-width: 768px) {
+    .navbar {
+        height: auto; /* Permite que la altura se ajuste según el contenido */
+        flex-direction: column; /* Cambia la dirección a columna en pantallas pequeñas */
+    }
+
+    .navbarContainer {
+        flex-direction: column; /* Alinea los elementos verticalmente */
+        padding: 5px; /* Reduce el padding */
+    }
+
+    .items {
+        width: 100%; /* Hace que el contenedor de elementos ocupe el 100% del ancho */
+        justify-content: space-around; /* Distribuye los elementos horizontalmente */
+        margin-left: 0; /* Elimina el margen izquierdo */
+        flex-wrap: wrap; /* Permite que los elementos se envuelvan en múltiples líneas si es necesario */
+    }
+
+    .item {
+        margin-right: 5px; /* Reduce el margen para pantallas pequeñas */
+    }
+
+    .icon {
+        font-size: 10px; /* Ajusta el tamaño del icono */
+    }
+
+    .icon:last-child {
+        margin-right: 0; /* Elimina margen del último icono */
     }
 }
