@@ -12,9 +12,10 @@ import { DataContext } from '../../../dataContext/dataContext';
 import { postUser, putUser } from '../../../api/user_api';
 import "./registerForm.css";
 
-const boolean_currencies = [
-  { value: true, label: 'Si' },
-  { value: false, label: 'No' },
+const role_currencies = [
+  { value: 'admin', label: 'Administrador' },
+  { value: 'manager', label: 'Gerente' },
+  { value: 'user', label: 'Usuario' }
 ];
 
 export default function BasicTextFields({ initialData }) {
@@ -22,8 +23,7 @@ export default function BasicTextFields({ initialData }) {
     username: '',
     password: '',
     email: '',
-    is_admin: '',
-    is_manager: ''
+    role: '',
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -156,30 +156,15 @@ export default function BasicTextFields({ initialData }) {
           helperText={errors.email}
         />
         <TextField
-          name="is_admin"
+          name="role"
           select
-          label="Administrador"
-          value={formData.is_admin}
+          label="Rol"
+          value={formData.role}
           helperText="Seleccione la opción deseada"
           className="customTextField"
           onChange={handleChange}
         >
-          {boolean_currencies.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          name="is_manager"
-          select
-          label="Gerente"
-          value={formData.is_manager}
-          helperText="Seleccione la opción deseada"
-          className="customTextField"
-          onChange={handleChange}
-        >
-          {boolean_currencies.map((option) => (
+          {role_currencies.map((option) => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}
             </MenuItem>

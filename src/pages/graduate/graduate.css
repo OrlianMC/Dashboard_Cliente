@@ -1,21 +1,21 @@
-.register {
+.graduate {
     display: flex;
     background-color: whitesmoke;
     color: #616161;
     flex-direction: column;
-    height: 90%;
 
-    .registerContainer {
+    .graduateContainer {
         flex: 6;
         background-color: whitesmoke;
         color: #616161;
 
-        .registerList {
+        .graduateList {
             -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
             box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
             padding: 20px;
             margin: 20px;
             overflow-x: auto;
+            /* Permite desplazamiento horizontal si es necesario */
 
             .datatableTitle {
                 width: 100%;
@@ -50,7 +50,6 @@
             .table {
                 margin-top: 50px;
                 width: 100%;
-                min-height: 50vh;
                 overflow-x: auto;
             }
         }
@@ -58,7 +57,7 @@
 }
 
 @media (max-width: 768px) {
-    .register {
+    .graduate {
         flex-direction: column;
     }
 

@@ -1,3 +1,12 @@
+/* .login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+} */
 .login {
   display: flex;
   justify-content: center;
@@ -6,4 +15,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  background-image: url('../../img/uci.jpg'); /* Cambia esto por tu imagen de fondo */
+  background-size: cover;
+  background-position: center;
 }

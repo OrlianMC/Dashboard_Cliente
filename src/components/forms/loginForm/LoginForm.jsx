@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import { Button, Snackbar, Alert } from '@mui/material';
 import { DataContext } from '../../../dataContext/dataContext';
 import { postSesion } from '../../../api/sesion_api';
+import logo from '../../../img/logo_uci.png';
 import "./loginForm.css";
 
 export default function LoginForm({ onLoginSuccess }) {
@@ -68,7 +69,8 @@ export default function LoginForm({ onLoginSuccess }) {
 
   return (
     <div className='loginContainer'>
-      <h2 className='h2'> Inicio de sesión: </h2>
+      <img src={logo} alt="Logo" className="logo" />
+      <h2 className='h2'> Tablero de Operaciones Dirección de Posgrado: </h2>
       <Box
         component="form"
         onSubmit={handleSubmit}

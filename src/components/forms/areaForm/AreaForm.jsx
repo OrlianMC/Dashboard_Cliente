@@ -41,9 +41,10 @@ export default function BasicTextFields({ initialData }) {
       errors.nombre = "El nombre debe tener al menos 3 caracteres.";
     } else if (formData.nombre.length > 50) {
       errors.nombre = "El nombre no puede exceder los 50 caracteres.";
-    } else if (!/^[a-zA-Z\s]*$/.test(formData.nombre)) {
-      errors.nombre = "El nombre solo puede contener letras y espacios.";
-    }
+    } 
+    // else if (!/^[a-zA-Z\s]*$/.test(formData.nombre)) {
+    //   errors.nombre = "El nombre solo puede contener letras y espacios.";
+    // }
     return errors;
   };
 

@@ -12,6 +12,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import BookIcon from '@mui/icons-material/Book';
 import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
@@ -67,6 +68,13 @@ const Sidebar = () => {
                         <li className="li">
                             <AutoStoriesIcon className="icon" />
                             <span className="span">Doctorando</span>
+                        </li>
+                    </Link>
+
+                    <Link to="/graduado/" className="link">
+                        <li className="li">
+                            <BookIcon className="icon" />
+                            <span className="span">Graduado</span>
                         </li>
                     </Link>
 

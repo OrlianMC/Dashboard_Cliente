@@ -26,6 +26,8 @@ export const DataProvider = ({ children }) => {
   const [loadDoctoral_Student, setLoadDoctoral_Student] = useState(false);
   const [knowledge_areas, setKnowledge_areas] = useState([]);
   const [loadKnowledge_Area, setLoadKnowledge_Area] = useState(false);
+  const [graduates, setGraduates] = useState([]);
+  const [loadGraduate, setLoadGraduate] = useState(false);
   const [persons, setPersons] = useState([]);
   const [loadPerson, setLoadPerson] = useState(false);
   const [programs, setPrograms] = useState([]);
@@ -46,6 +48,7 @@ export const DataProvider = ({ children }) => {
         doctors, setDoctors, loadDoctor, setLoadDoctor,
         doctoral_students, setDoctoral_students, loadDoctoral_Student, setLoadDoctoral_Student,
         knowledge_areas, setKnowledge_areas, loadKnowledge_Area, setLoadKnowledge_Area,
+        graduates, setGraduates, loadGraduate, setLoadGraduate,
         persons, setPersons, loadPerson, setLoadPerson,
         programs, setPrograms, loadProgram, setLoadProgram,
         sectors, setSectors, loadSector, setLoadSector,

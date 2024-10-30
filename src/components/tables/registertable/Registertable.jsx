@@ -30,6 +30,12 @@ import { DataContext } from '../../../dataContext/dataContext';
 import './registertable.css';
 import { deleteUser, getUser } from '../../../api/user_api';
 
+const role_currencies = [
+  { value: 'admin', label: 'Administrador' },
+  { value: 'manager', label: 'Gerente' },
+  { value: 'user', label: 'Usuario' }
+];
+
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -62,8 +68,7 @@ const headCells = [
   { id: 'id', numeric: false, disablePadding: false, label: 'ID' },
   { id: 'username', numeric: false, disablePadding: false, label: 'Nombre de usuario' },
   { id: 'email', numeric: false, disablePadding: false, label: 'Correo' },
-  { id: 'is_admin', numeric: false, disablePadding: false, label: 'Administrador' },
-  { id: 'is_manager', numeric: false, disablePadding: false, label: 'Gerente' },
+  { id: 'role', numeric: false, disablePadding: false, label: 'Rol' },
   { id: 'edicion', numeric: false, disablePadding: false, label: 'Edición' },
 ];
 
@@ -351,8 +356,7 @@ export default function EnhancedTable() {
                     </TableCell>
                     <TableCell align="left">{row.username}</TableCell>
                     <TableCell align="left">{row.email}</TableCell>
-                    <TableCell align="left">{row.is_admin ? 'Si' : 'No' }</TableCell>
-                    <TableCell align="left">{row.is_manager ? 'Si' : 'No' }</TableCell>
+                    <TableCell align="left">{role_currencies.find(role => role.value === row.role)?.label || 'N/A'}</TableCell>
                     <TableCell align="center">
                       <Button
                         variant="contained"

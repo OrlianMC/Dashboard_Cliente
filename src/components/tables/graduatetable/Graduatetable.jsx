@@ -26,9 +26,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
-import { deleteArea, getArea } from '../../../api/area_api';
+import { deleteGraduate, getGraduate } from '../../../api/graduate_api';
 import { DataContext } from '../../../dataContext/dataContext';
-import './areatable.css';
+import './graduatetable.css';
 import { getStatistics } from '../../../api/statistics_api';
 
 function descendingComparator(a, b, orderBy) {
@@ -60,8 +60,11 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: 'idarea', numeric: false, disablePadding: false, label: 'ID' },
-  { id: 'nombre', numeric: false, disablePadding: false, label: 'Nombre' },
+  { id: 'idgraduado', numeric: false, disablePadding: false, label: 'ID' },
+  { id: 'fechadefensa', numeric: false, disablePadding: false, label: 'Fecha de Defensa' },
+  { id: 'persona_idpersona', numeric: false, disablePadding: false, label: 'Persona' },
+  { id: 'facultadarea_idarea', numeric: false, disablePadding: false, label: 'Facultad' },
+  { id: 'areadeconocimiento_idareadeconocimiento', numeric: false, disablePadding: false, label: 'Área de Conocimiento' },
   { id: 'edicion', numeric: false, disablePadding: false, label: 'Edición' },
 ];
 
@@ -143,7 +146,7 @@ function EnhancedTableToolbar(props) {
           justifyContent={'space-between'}
           marginRight={'10px'}
         >
-          Áreas
+          Graduados
           <div className="search">
             <input
               type="text"
@@ -193,17 +196,17 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
-  const { setAreas, loadArea, setLoadArea } = useContext(DataContext);
+  const { setGraduates, loadGraduate, setLoadGraduate, persons, areas, knowledge_areas } = useContext(DataContext);
   // const [loadData, setLoadData] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const mappedData = await getArea();
+        const mappedData = await getGraduate();
         const response = await getStatistics();
         console.log("Estadistica", response.data)
-        setAreas(mappedData.data);
+        setGraduates(mappedData.data);
         setRows(mappedData.data);
       } catch (error) {
         console.error("Error al cargar los datos:", error);
@@ -211,7 +214,7 @@ export default function EnhancedTable() {
     };
 
     fetchData();
-  }, [loadArea]);
+  }, [loadGraduate]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -221,19 +224,19 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.idarea);
+      const newSelected = rows.map((n) => n.idgraduado);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, idarea) => {
-    const selectedIndex = selected.indexOf(idarea);
+  const handleClick = (event, idgraduado) => {
+    const selectedIndex = selected.indexOf(idgraduado);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, idarea);
+      newSelected = newSelected.concat(selected, idgraduado);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -250,10 +253,10 @@ export default function EnhancedTable() {
   const handleDelete = async () => {
     if (window.confirm("¿Estás seguro de que deseas eliminar los elementos seleccionados?")) {
       try {
-        await Promise.all(selected.map(item => deleteArea(item)));
-        const updatedRows = rows.filter(row => !selected.includes(row.idarea));
+        await Promise.all(selected.map(item => deleteGraduate(item)));
+        const updatedRows = rows.filter(row => !selected.includes(row.idgraduado));
         setRows(updatedRows);
-        setLoadArea(!loadArea);
+        setLoadGraduate(!loadGraduate);
         setSelected([]);
         setSearchTerm('');
       } catch (error) {
@@ -265,7 +268,7 @@ export default function EnhancedTable() {
 
   const handleEdit = (row) => {
     console.log('Editando fila:', row);
-    navigate(`/area/modificar/`, { state: { row } });
+    navigate(`/graduado/modificar/`, { state: { row } });
   };
 
   const handleChangePage = (event, newPage) => {
@@ -286,7 +289,11 @@ export default function EnhancedTable() {
   };
 
   const filteredRows = rows.filter((row) =>
-    row.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    String(row.idgraduado).toLowerCase().includes(searchTerm.toLowerCase()) ||
+    String(row.fdefensa).toLowerCase().includes(searchTerm.toLowerCase()) ||
+    ((persons.find(person => person.idpersona === row.persona_idpersona || 0))?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    ((areas.find(area => area.idarea === row.facultadarea_idarea || 0))?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    ((knowledge_areas.find(knowledge_area => knowledge_area.idareadeconocimiento === row.areadeconocimiento_idareadeconocimiento || 0))?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const visibleRows = React.useMemo(
@@ -325,17 +332,17 @@ export default function EnhancedTable() {
             />
             <TableBody>
               {visibleRows.map((row, index) => {
-                const isItemSelected = selected.indexOf(row.idarea) !== -1;
+                const isItemSelected = selected.indexOf(row.idgraduado) !== -1;
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.idarea)}
+                    onClick={(event) => handleClick(event, row.idgraduado)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.idarea}
+                    key={row.idgraduado}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
@@ -347,9 +354,12 @@ export default function EnhancedTable() {
                       />
                     </TableCell>
                     <TableCell component="th" id={labelId} scope="row" padding="normal">
-                      {row.idarea}
+                      {row.idgraduado}
                     </TableCell>
-                    <TableCell align="left">{row.nombre}</TableCell>
+                    <TableCell align="left">{row.fechadefensa}</TableCell>
+                    <TableCell align="left">{(persons.find(person => person.idpersona === row.persona_idpersona || 0))?.nombre || 'N/A'}</TableCell>
+                    <TableCell align="left">{(areas.find(area => area.idarea === row.facultadarea_idarea || 0))?.nombre || 'N/A'}</TableCell>
+                    <TableCell align="left">{(knowledge_areas.find(knowledge_area => knowledge_area.idareadeconocimiento === row.areadeconocimiento_idareadeconocimiento || 0))?.nombre || 'N/A'}</TableCell>
                     <TableCell align="center">
                       <Button
                         variant="contained"
