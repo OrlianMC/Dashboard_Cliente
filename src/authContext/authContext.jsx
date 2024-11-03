@@ -17,7 +17,7 @@ const authReducer = (state, action) => {
         ...state,
         user: action.payload.user,
         role: action.payload.role,
-        tokenAccess: action.payload.acces,
+        tokenAccess: action.payload.access,
         tokenRefresh: action.payload.refresh,
         token: action.payload.token,
       };

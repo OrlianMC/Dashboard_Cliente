@@ -30,6 +30,10 @@
             }
         }
 
+        .buttom {
+            color: black;
+        }
+
         .icon {
             font-size: 25px;
             cursor: pointer;
