@@ -1,5 +1,6 @@
-// import { useState } from "react";
-// import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+// import { useState, useContext } from "react";
+// import { BrowserRouter, Route, Routes, Navigate, useNavigate } from "react-router-dom";
+// import { ThemeProvider, createTheme } from '@mui/material/styles';
 // import Home from "./pages/home/Home";
 // import Login from "./pages/login/Login";
 // import Register from "./pages/register/Register";
@@ -32,6 +33,9 @@
 // import Strategic_Sector from "./pages/strategic_sector/Strategic_sector";
 // import Strategic_SectorCreate from "./pages/strategic_sector/Strategic_sectorCreate";
 // import Strategic_SectorUpdate from "./pages/strategic_sector/Strategic_sectorUpdate";
+// import Graduate from "./pages/graduate/Graduate";
+// import GraduateCreate from "./pages/graduate/GraduateCreate";
+// import GraduateUpdate from "./pages/graduate/GraduateUpdate";
 // import Tutor from "./pages/tutor/Tutor";
 // import TutorCreate from "./pages/tutor/TutorCreate";
 // import TutorUpdate from "./pages/tutor/TutorUpdate";
@@ -39,79 +43,134 @@
 // import Navbar from "./components/navbar/Navbar";
 // import Footer from "./components/footer/Footer";
 // import { DataProvider } from "./dataContext/dataContext";
+// import { AuthContext } from "./authContext/authContext";
 // import "./App.css";
+
+// const theme = createTheme();
 
 // function App() {
 //   const [isLoggedIn, setIsLoggedIn] = useState(false);
+//   const { state } = useContext(AuthContext);
+//   const { role } = state;
+//   const navigate = useNavigate();
 
 //   const handleLoginSuccess = () => {
 //     setIsLoggedIn(true);
+//     navigate("/home");
 //   };
 
 //   return (
 //     <DataProvider>
-//       <BrowserRouter>
-//         {!isLoggedIn ? (
-//           <div className="fullScreenLogin">
-//             <Login onLoginSuccess={handleLoginSuccess} />
-//           </div>
-//         ) : (
-//           <div className="app">
-//             <div className="flexProperty">
-//               <Sidebar />
-//               <div className="appContainer">
-//                 <Navbar />
-//                 <Routes>
-//                   <Route path="/" element={<Home />} />
-//                   <Route path="/register" element={<Register />} />
-//                   <Route path="/register/crear/" element={<RegisterCreate />} />
-//                   <Route path="/register/modificar/" element={<RegisterUpdate />} />
-//                   <Route path="/area" element={<Area />} />
-//                   <Route path="/area/crear" element={<AreaCreate />} />
-//                   <Route path="/area/modificar" element={<AreaUpdate />} />
-//                   <Route path="/areadeconocimiento" element={<Knowledge_Area />} />
-//                   <Route path="/areadeconocimiento/crear" element={<Knowledge_AreaCreate />} />
-//                   <Route path="/areadeconocimiento/modificar" element={<Knowledge_AreaUpdate />} />
-//                   <Route path="/centro" element={<Center />} />
-//                   <Route path="/centro/crear" element={<CenterCreate />} />
-//                   <Route path="/centro/modificar" element={<CenterUpdate />} />
-//                   <Route path="/doctor" element={<Doctor />} />
-//                   <Route path="/doctor/crear" element={<DoctorCreate />} />
-//                   <Route path="/doctor/modificar" element={<DoctorUpdate />} />
-//                   <Route path="/doctorando" element={<Doctoral_Student />} />
-//                   <Route path="/doctorando/crear" element={<Doctoral_StudentCreate />} />
-//                   <Route path="/doctorando/modificar" element={<Doctoral_StudentUpdate />} />
-//                   <Route path="/pais" element={<Country />} />
-//                   <Route path="/pais/crear" element={<CountryCreate />} />
-//                   <Route path="/pais/modificar" element={<CountryUpdate />} />
-//                   <Route path="/persona" element={<Person />} />
-//                   <Route path="/persona/crear" element={<PersonCreate />} />
-//                   <Route path="/persona/modificar" element={<PersonUpdate />} />
-//                   <Route path="/programa" element={<Program />} />
-//                   <Route path="/programa/crear" element={<ProgramCreate />} />
-//                   <Route path="/programa/modificar" element={<ProgramUpdate />} />
-//                   <Route path="/sectorest" element={<Strategic_Sector />} />
-//                   <Route path="/sectorest/crear" element={<Strategic_SectorCreate />} />
-//                   <Route path="/sectorest/modificar" element={<Strategic_SectorUpdate />} />
-//                   <Route path="/tutor" element={<Tutor />} />
-//                   <Route path="/tutor/crear" element={<TutorCreate />} />
-//                   <Route path="/tutor/modificar" element={<TutorUpdate />} />
-//                   <Route path="/login" element={<Navigate to="/" replace />} />
-//                 </Routes>
-//               </div>
+//       <ThemeProvider theme={theme}>
+//         <BrowserRouter>
+//           {!isLoggedIn ? (
+//             <div className="fullScreenLogin">
+//               <Login onLoginSuccess={handleLoginSuccess} />
 //             </div>
+//           ) : (
+//             <div className="app">
+//               <div className="flexProperty">
+//                 <Sidebar />
+//                 <div className="appContainer">
+//                   <Navbar />
+//                   <Routes>
+//                   <Route path="/home" element={<Home />} />
+//                   <Route path="/" element={<Navigate to="/login" replace />}/>
+
+//                     {role === "admin" && (
+//                       <>
+//                         <Route path="/register" element={<Register />} />
+//                         <Route path="/register/crear" element={<RegisterCreate />} />
+//                         <Route path="/register/modificar" element={<RegisterUpdate />} />
+//                         <Route path="/area" element={<Area />} />
+//                         <Route path="/area/crear" element={<AreaCreate />} />
+//                         <Route path="/area/modificar" element={<AreaUpdate />} />
+//                         <Route path="/areadeconocimiento" element={<Knowledge_Area />} />
+//                         <Route path="/areadeconocimiento/crear" element={<Knowledge_AreaCreate />} />
+//                         <Route path="/areadeconocimiento/modificar" element={<Knowledge_AreaUpdate />} />
+//                         <Route path="/centro" element={<Center />} />
+//                         <Route path="/centro/crear" element={<CenterCreate />} />
+//                         <Route path="/centro/modificar" element={<CenterUpdate />} />
+//                         <Route path="/doctor" element={<Doctor />} />
+//                         <Route path="/doctor/crear" element={<DoctorCreate />} />
+//                         <Route path="/doctor/modificar" element={<DoctorUpdate />} />
+//                         <Route path="/doctorando" element={<Doctoral_Student />} />
+//                         <Route path="/doctorando/crear" element={<Doctoral_StudentCreate />} />
+//                         <Route path="/doctorando/modificar" element={<Doctoral_StudentUpdate />} />
+//                         <Route path="/graduado" element={<Graduate />} />
+//                         <Route path="/graduado/crear" element={<GraduateCreate />} />
+//                         <Route path="/graduado/modificar" element={<GraduateUpdate />} />
+//                         <Route path="/pais" element={<Country />} />
+//                         <Route path="/pais/crear" element={<CountryCreate />} />
+//                         <Route path="/pais/modificar" element={<CountryUpdate />} />
+//                         <Route path="/persona" element={<Person />} />
+//                         <Route path="/persona/crear" element={<PersonCreate />} />
+//                         <Route path="/persona/modificar" element={<PersonUpdate />} />
+//                         <Route path="/programa" element={<Program />} />
+//                         <Route path="/programa/crear" element={<ProgramCreate />} />
+//                         <Route path="/programa/modificar" element={<ProgramUpdate />} />
+//                         <Route path="/sectorest" element={<Strategic_Sector />} />
+//                         <Route path="/sectorest/crear" element={<Strategic_SectorCreate />} />
+//                         <Route path="/sectorest/modificar" element={<Strategic_SectorUpdate />} />
+//                         <Route path="/tutor" element={<Tutor />} />
+//                         <Route path="/tutor/crear" element={<TutorCreate />} />
+//                         <Route path="/tutor/modificar" element={<TutorUpdate />} />
+//                       </>
+//                     )}
+//                     {role === "manager" && (
+//                       <>
+//                         <Route path="/area" element={<Area />} />
+//                         <Route path="/area/crear" element={<AreaCreate />} />
+//                         <Route path="/area/modificar" element={<AreaUpdate />} />
+//                         <Route path="/areadeconocimiento" element={<Knowledge_Area />} />
+//                         <Route path="/areadeconocimiento/crear" element={<Knowledge_AreaCreate />} />
+//                         <Route path="/areadeconocimiento/modificar" element={<Knowledge_AreaUpdate />} />
+//                         <Route path="/centro" element={<Center />} />
+//                         <Route path="/centro/crear" element={<CenterCreate />} />
+//                         <Route path="/centro/modificar" element={<CenterUpdate />} />
+//                         <Route path="/doctor" element={<Doctor />} />
+//                         <Route path="/doctor/crear" element={<DoctorCreate />} />
+//                         <Route path="/doctor/modificar" element={<DoctorUpdate />} />
+//                         <Route path="/doctorando" element={<Doctoral_Student />} />
+//                         <Route path="/doctorando/crear" element={<Doctoral_StudentCreate />} />
+//                         <Route path="/doctorando/modificar" element={<Doctoral_StudentUpdate />} />
+//                         <Route path="/graduado" element={<Graduate />} />
+//                         <Route path="/graduado/crear" element={<GraduateCreate />} />
+//                         <Route path="/graduado/modificar" element={<GraduateUpdate />} />
+//                         <Route path="/pais" element={<Country />} />
+//                         <Route path="/pais/crear" element={<CountryCreate />} />
+//                         <Route path="/pais/modificar" element={<CountryUpdate />} />
+//                         <Route path="/persona" element={<Person />} />
+//                         <Route path="/persona/crear" element={<PersonCreate />} />
+//                         <Route path="/persona/modificar" element={<PersonUpdate />} />
+//                         <Route path="/programa" element={<Program />} />
+//                         <Route path="/programa/crear" element={<ProgramCreate />} />
+//                         <Route path="/programa/modificar" element={<ProgramUpdate />} />
+//                         <Route path="/sectorest" element={<Strategic_Sector />} />
+//                         <Route path="/sectorest/crear" element={<Strategic_SectorCreate />} />
+//                         <Route path="/sectorest/modificar" element={<Strategic_SectorUpdate />} />
+//                         <Route path="/tutor" element={<Tutor />} />
+//                         <Route path="/tutor/crear" element={<TutorCreate />} />
+//                         <Route path="/tutor/modificar" element={<TutorUpdate />} />
+//                       </>
+//                     )}
+//                     <Route path="*" element={<Navigate to="/home" replace />} />
+//                   </Routes>
+//                 </div>
+//               </div>
 //               <Footer />
-//           </div>
-//         )}
-//       </BrowserRouter>
+//             </div>
+//           )}
+//         </BrowserRouter>
+//       </ThemeProvider>
 //     </DataProvider>
 //   );
 // }
 
 // export default App;
-import { useState } from "react";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import { ThemeProvider, createTheme } from '@mui/material/styles'; // Importa ThemeProvider y createTheme
+import { useState, useContext } from "react";
+import { BrowserRouter, Route, Routes, Navigate, useNavigate } from "react-router-dom";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
@@ -154,36 +213,55 @@ import Sidebar from "./components/sidebar/Sidebar";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
 import { DataProvider } from "./dataContext/dataContext";
+import { AuthContext } from "./authContext/authContext";
 import "./App.css";
 
-const theme = createTheme(); // Crea un tema
+const theme = createTheme();
 
 function App() {
+  return (
+    <DataProvider>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <MainApp />
+        </BrowserRouter>
+      </ThemeProvider>
+    </DataProvider>
+  );
+}
+
+function MainApp() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { state } = useContext(AuthContext);
+  const { role } = state;
+  const navigate = useNavigate();
 
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
+    navigate("/home");
   };
-
+  
   return (
-    <DataProvider>
-      <ThemeProvider theme={theme}> {/* Envuelve tu aplicación en ThemeProvider */}
-        <BrowserRouter>
-          {!isLoggedIn ? (
-            <div className="fullScreenLogin">
-              <Login onLoginSuccess={handleLoginSuccess} />
-            </div>
-          ) : (
-            <div className="app">
-              <div className="flexProperty">
-                <Sidebar />
-                <div className="appContainer">
-                  <Navbar />
-                  <Routes>
-                    <Route path="/" element={<Home />} />
+    <>
+      {!isLoggedIn ? (
+        <div className="fullScreenLogin">
+          <Login onLoginSuccess={handleLoginSuccess} />
+        </div>
+      ) : (
+        <div className="app">
+          <div className="flexProperty">
+            <Sidebar />
+            <div className="appContainer">
+              <Navbar />
+              <Routes>
+                <Route path="/home" element={<Home />} />
+                <Route path="/" element={<Navigate to="/login" replace />} />
+
+                {role === "admin" && (
+                  <>
                     <Route path="/register" element={<Register />} />
-                    <Route path="/register/crear/" element={<RegisterCreate />} />
-                    <Route path="/register/modificar/" element={<RegisterUpdate />} />
+                    <Route path="/register/crear" element={<RegisterCreate />} />
+                    <Route path="/register/modificar" element={<RegisterUpdate />} />
                     <Route path="/area" element={<Area />} />
                     <Route path="/area/crear" element={<AreaCreate />} />
                     <Route path="/area/modificar" element={<AreaUpdate />} />
@@ -217,16 +295,53 @@ function App() {
                     <Route path="/tutor" element={<Tutor />} />
                     <Route path="/tutor/crear" element={<TutorCreate />} />
                     <Route path="/tutor/modificar" element={<TutorUpdate />} />
-                    <Route path="/login" element={<Navigate to="/" replace />} />
-                  </Routes>
-                </div>
-              </div>
-              <Footer />
+                  </>
+                )}
+                {role === "manager" && (
+                  <>
+                    <Route path="/area" element={<Area />} />
+                    <Route path="/area/crear" element={<AreaCreate />} />
+                    <Route path="/area/modificar" element={<AreaUpdate />} />
+                    <Route path="/areadeconocimiento" element={<Knowledge_Area />} />
+                    <Route path="/areadeconocimiento/crear" element={<Knowledge_AreaCreate />} />
+                    <Route path="/areadeconocimiento/modificar" element={<Knowledge_AreaUpdate />} />
+                    <Route path="/centro" element={<Center />} />
+                    <Route path="/centro/crear" element={<CenterCreate />} />
+                    <Route path="/centro/modificar" element={<CenterUpdate />} />
+                    <Route path="/doctor" element={<Doctor />} />
+                    <Route path="/doctor/crear" element={<DoctorCreate />} />
+                    <Route path="/doctor/modificar" element={<DoctorUpdate />} />
+                    <Route path="/doctorando" element={<Doctoral_Student />} />
+                    <Route path="/doctorando/crear" element={<Doctoral_StudentCreate />} />
+                    <Route path="/doctorando/modificar" element={<Doctoral_StudentUpdate />} />
+                    <Route path="/graduado" element={<Graduate />} />
+                    <Route path="/graduado/crear" element={<GraduateCreate />} />
+                    <Route path="/graduado/modificar" element={<GraduateUpdate />} />
+                    <Route path="/pais" element={<Country />} />
+                    <Route path="/pais/crear" element={<CountryCreate />} />
+                    <Route path="/pais/modificar" element={<CountryUpdate />} />
+                    <Route path="/persona" element={<Person />} />
+                    <Route path="/persona/crear" element={<PersonCreate />} />
+                    <Route path="/persona/modificar" element={<PersonUpdate />} />
+                    <Route path="/programa" element={<Program />} />
+                    <Route path="/programa/crear" element={<ProgramCreate />} />
+                    <Route path="/programa/modificar" element={<ProgramUpdate />} />
+                    <Route path="/sectorest" element={<Strategic_Sector />} />
+                    <Route path="/sectorest/crear" element={<Strategic_SectorCreate />} />
+                    <Route path="/sectorest/modificar" element={<Strategic_SectorUpdate />} />
+                    <Route path="/tutor" element={<Tutor />} />
+                    <Route path="/tutor/crear" element={<TutorCreate />} />
+                    <Route path="/tutor/modificar" element={<TutorUpdate />} />
+                  </>
+                )}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
             </div>
-          )}
-        </BrowserRouter>
-      </ThemeProvider>
-    </DataProvider>
+          </div>
+          <Footer />
+        </div>
+      )}
+    </>
   );
 }
 

@@ -1,14 +1,4 @@
 import React, { createContext, useState, useEffect } from 'react';
-// import { getArea } from '../api/area_api';
-// import { getCenter } from '../api/center_api';
-// import { getCountry } from '../api/country_api';
-// import { getSector } from '../api/sector_api';
-// import { getPerson } from '../api/person_api';
-// import { getKnowledge_area } from '../api/knowledge_area_api';
-// import { getProgram } from '../api/program_api';
-// import { getDoctoral_student } from '../api/doctoral_student_api';
-// import { getDoctor } from '../api/doctor_api';
-// import { getTutor } from '../api/tutor_api';
 
 export const DataContext = createContext();
 

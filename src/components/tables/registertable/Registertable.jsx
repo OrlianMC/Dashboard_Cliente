@@ -27,8 +27,9 @@ import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import { DataContext } from '../../../dataContext/dataContext';
-import './registertable.css';
+import { AuthContext } from '../../../authContext/authContext';
 import { deleteUser, getUser } from '../../../api/user_api';
+import './registertable.css';
 
 const role_currencies = [
   { value: 'admin', label: 'Administrador' },
@@ -200,7 +201,9 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
-  const { token, loadUser, setLoadUser } = useContext(DataContext);
+  const { loadUser, setLoadUser } = useContext(DataContext);
+  const { state } = useContext(AuthContext);
+  const { token } = state;
   const navigate = useNavigate();
 
   useEffect(() => {

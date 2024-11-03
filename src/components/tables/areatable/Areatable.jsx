@@ -194,7 +194,6 @@ export default function EnhancedTable() {
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
   const { setAreas, loadArea, setLoadArea } = useContext(DataContext);
-  // const [loadData, setLoadData] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {

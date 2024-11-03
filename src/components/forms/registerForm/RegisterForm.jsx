@@ -9,6 +9,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Button } from '@mui/material';
 import { DataContext } from '../../../dataContext/dataContext';
+import { AuthContext } from '../../../authContext/authContext';
 import { postUser, putUser } from '../../../api/user_api';
 import "./registerForm.css";
 
@@ -28,7 +29,9 @@ export default function BasicTextFields({ initialData }) {
 
   const [formData, setFormData] = useState(initialFormData);
   const [showPassword, setShowPassword] = useState(false);
-  const { token, loadUser, setLoadUser } = useContext(DataContext);
+  const { loadUser, setLoadUser } = useContext(DataContext);
+  const { state } = useContext(AuthContext);
+  const { token } = state;
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
 

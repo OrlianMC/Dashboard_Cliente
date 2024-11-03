@@ -30,6 +30,9 @@ import { deleteGraduate, getGraduate } from '../../../api/graduate_api';
 import { DataContext } from '../../../dataContext/dataContext';
 import './graduatetable.css';
 import { getStatistics } from '../../../api/statistics_api';
+import { getPerson } from '../../../api/person_api';
+import { getArea } from '../../../api/area_api';
+import { getKnowledge_area } from '../../../api/knowledge_area_api';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -196,7 +199,7 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
-  const { setGraduates, loadGraduate, setLoadGraduate, persons, areas, knowledge_areas } = useContext(DataContext);
+  const { setGraduates, loadGraduate, setLoadGraduate, setPersons, persons, setAreas, areas, setKnowledge_areas, knowledge_areas } = useContext(DataContext);
   // const [loadData, setLoadData] = useState(true);
   const navigate = useNavigate();
 
@@ -208,6 +211,20 @@ export default function EnhancedTable() {
         console.log("Estadistica", response.data)
         setGraduates(mappedData.data);
         setRows(mappedData.data);
+
+        const fetchIfNeeded = async (fetchFunction, setter, currentData) => {
+          if (currentData.length === 0) {
+            const data = await fetchFunction();
+            setter(data.data);
+          }
+        };
+  
+        await Promise.all([
+          fetchIfNeeded(getPerson, setPersons, persons),
+          fetchIfNeeded(getArea, setAreas, areas),
+          fetchIfNeeded(getKnowledge_area, setKnowledge_areas, knowledge_areas),
+        ]);
+
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       }
