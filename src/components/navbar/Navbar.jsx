@@ -1,10 +1,11 @@
 import { useContext } from 'react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { AuthContext } from "./../../authContext/authContext"
+import { AuthContext } from "./../../authContext/authContext";
 import { useNavigate } from "react-router-dom";
-import "./navbar.css";
 import { Button } from '@mui/material';
+import { postSesionLogout } from '../../api/sesion_api';
+import "./navbar.css";
 
 const role_currencies = [
     { value: 'admin', label: 'Administrador' },
@@ -14,15 +15,15 @@ const role_currencies = [
 
 const Navbar = () => {
     const { state, dispatch } = useContext(AuthContext);
-    const { role, user } = state;
+    const { role, user, token} = state;
     const navigate = useNavigate();
     
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        await postSesionLogout(token);
         localStorage.removeItem('tokenAccess');
         localStorage.removeItem('tokenRefresh');
         localStorage.removeItem('role');
         localStorage.removeItem('username');
-        
         dispatch({ type: 'LOGOUT' });
         navigate('/login');
       };
