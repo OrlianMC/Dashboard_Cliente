@@ -18,6 +18,10 @@ const Home = () => {
         setStatisticsData(response.data);
         setArrayPieChart2(response.data.doctoral_students_by_knowledge_area);
         setArrayBarChart2(response.data.doctoral_students_by_program_and_area);
+        console.log(response.data);
+        // console.log(response.data.doctoral_students_by_knowledge_area);
+        // console.log("StatisticsData:",statisticsData);
+        console.log("arrayPieChart2:",arrayPieChart2);
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       }
@@ -57,23 +61,24 @@ const Home = () => {
 
       <div className="pieChart">
         <div className="chart">
-          Figura 3: Composición de doctores por áreas del conocimiento
-          <PieChart1 />
+          {/* Figura 3: Composición de doctores por áreas del conocimiento */}
+          Composición de doctorandos por áreas del conocimiento
+          {arrayPieChart2.length > 0 ? <PieChart1 data={arrayPieChart2} /> : <p>Cargando...</p>}
         </div>
         <div className="chart">
           Composición de doctorandos por áreas del conocimiento
-          <PieChart2 array={arrayPieChart2} />
+          {arrayPieChart2.length > 0 ? <PieChart2 data={arrayPieChart2} /> : <p>Cargando...</p>}
         </div>
       </div>
 
       <div className="barChart">
         <div className="chart">
           Figura 4: Composición de doctores por áreas del conocimiento y facultad
-          <BarChart1 />
+          {arrayBarChart2.length > 0 ? <BarChart1 data={arrayBarChart2} /> : <p>Cargando...</p>}
         </div>
         <div className="chart">
-          Figura 7: Relación de doctorandos por facultad y programa
-          <BarChart2 array={arrayBarChart2}/>
+          Relación de doctorandos por facultad y programa
+          {arrayBarChart2.length > 0 ? <BarChart2 data={arrayBarChart2} /> : <p>Cargando...</p>}
         </div>
       </div>
     </div>

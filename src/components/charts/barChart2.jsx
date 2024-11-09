@@ -1,82 +1,121 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
-export default function BarChart2({array}) {
-  if (!array || array.length === 0) {
-    return <div>No hay datos disponibles para mostrar.</div>;
-  }
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-  // const dataChart = array.map((element, index) => ({
-  //   id: index + 1,
-  //   stack: element.doctorando_count,
-  //   label: element.facultadarea_idarea__nombre,
-  // }));
+const BarChart2 = ({ data }) => {
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [],
+  });
 
+  useEffect(() => {
+    if (data.length > 0) {
+      const faculties = {};
+      const colors = {};
 
+      data.forEach(item => {
+        const faculty = item.facultadarea_idarea__nombre;
+        const program = item.programa_idprograma__nombre;
+        const count = item.doctorando_count;
 
-// "doctoral_students_by_program_and_area": [
-//     {
-//       "facultadarea_idarea__nombre": "Facultad 1",
-//       "programa_idprograma__nombre": "Doctorado en Informática",
-//       "doctorando_count": 30
-//     },
-//     {
-//       "facultadarea_idarea__nombre": "DEP",
-//       "programa_idprograma__nombre": "Doctorado en Bioinformatica",
-//       "doctorando_count": 4
-//     },
-//     {
-//       "facultadarea_idarea__nombre": "Rectoría",
-//       "programa_idprograma__nombre": "Doctorado en estudios sociales de la ciencia y la tecnologia",
-//       "doctorando_count": 8
-//     },
-//     {
-//       "facultadarea_idarea__nombre": "CENED",
-//       "programa_idprograma__nombre": "Doctorado en Ciencias de la Salud",
-//       "doctorando_count": 1
-//     },
-//     {
-//       "facultadarea_idarea__nombre": "Facultad 4",
-//       "programa_idprograma__nombre": "Doctorado en Educación Superior",
-//       "doctorando_count": 6
-//     },
-//     {
-//       "facultadarea_idarea__nombre": "Facultad 3",
-//       "programa_idprograma__nombre": "Doctorado en Ciencias de la Educación",
-//       "doctorando_count": 10
-//     }
-//   ]
-// }
+        if (!faculties[faculty]) {
+          faculties[faculty] = {};
+        }
+        faculties[faculty][program] = count;
+
+        if (!colors[program]) {
+          colors[program] = `hsl(${Math.random() * 360}, 70%, 50%)`;
+        }
+      });
+
+      const labels = Object.keys(faculties);
+      const datasets = Object.keys(colors).map(program => ({
+        label: program,
+        data: labels.map(faculty => faculties[faculty][program] || 0),
+        backgroundColor: colors[program],
+      }));
+
+      setChartData({
+        labels,
+        datasets,
+      });
+    }
+  }, [data]);
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Facultades',
+          font: {
+            size: 16,
+          },
+        },
+        ticks: {
+          autoSkip: false,
+          maxRotation: 90,
+          minRotation: 45,
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Número de Doctorandos',
+          font: {
+            size: 16,
+          },
+        },
+        beginAtZero: true,
+      },
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: (tooltipItem) => {
+            const count = tooltipItem.raw;
+            const datasetIndex = tooltipItem.datasetIndex;
+            const program = chartData.datasets[datasetIndex].label;
+            return `${program}: ${count}`;
+          },
+        },
+        bodyFont: {
+          size: 14,
+        },
+      },
+      legend: {
+        display: true,
+        position: 'top',
+        labels: {
+          boxWidth: 15,
+          padding: 20,
+          font: {
+            size: 14,
+          },
+        },
+      },
+    },
+  };
+
   return (
-    <BarChart
-      series={[
-        { data: [10], stack: 'A', label: 'Cienc. de la Edu.' },
-        { data: [6], stack: 'A1', label: 'Edu. Sup.' },
-        { data: [1], stack: 'A2', label: 'Cienc. de la Salud' }, 
-        { data: [8], stack: 'A3', label: 'Est. Soc. de la Cienc. y la tecno.' },
-        { data: [4], stack: 'A4', label: 'Bioinformatica' },
-        { data: [29], stack: 'A5', label: 'Informática' },
-        { data: [1], stack: 'A5', label: 'Informática' },
-      ]}
-      barLabel={(item, context) => {
-        // if ((item.value ?? 0) > 10) {
-        //   return 'High';
-        // }
-        // return context.bar.height < 60 ? null : item.value?.toString();
-        return item.value?.toString();
-      }}
-      width={600}
-      height={350}
-    />
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '90%', height: '100%', margin: '0 auto', marginTop: '5vh' }}>
+      <Bar data={chartData} options={options} />
+    </div>
   );
-}
+};
 
 BarChart2.propTypes = {
-  array: PropTypes.arrayOf(
+  data: PropTypes.arrayOf(
     PropTypes.shape({
+      facultadarea_idarea__nombre: PropTypes.string.isRequired,
+      programa_idprograma__nombre: PropTypes.string.isRequired,
       doctorando_count: PropTypes.number.isRequired,
-      nombre: PropTypes.string.isRequired,
     })
-  ).isRequired,
-};
+  )};
+
+export default BarChart2;

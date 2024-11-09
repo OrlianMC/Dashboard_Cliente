@@ -1,25 +1,119 @@
-import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
-export default function CustomLabels() {
-  return (
-    <BarChart
-      series={[
-        { data: [4, 2, 5, 4, 1], stack: 'A', label: 'Series A1' },
-        { data: [2, 8, 1, 3, 1], stack: 'A', label: 'Series A2' },
-        { data: [2, 8, 1, 3, 1], stack: 'A', label: 'Series A3' },
-        { data: [3, 5, 6, 7, 2], stack: 'A', label: 'Series A4' },
-        { data: [2, 2, 2, 2, 2], stack: 'A', label: 'Series A5' },
-        // { data: [14, 6, 5, 8, 9], label: 'Series B1' },
-      ]}
-      barLabel={(item, context) => {
-        if ((item.value ?? 0) > 10) {
-          return 'High';
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+const BarChart1 = ({ data }) => {
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [],
+  });
+
+  useEffect(() => {
+    if (data.length > 0) {
+      const faculties = {};
+      const colors = {};
+
+      data.forEach(item => {
+        const faculty = item.facultadarea_idarea__nombre;
+        const program = item.programa_idprograma__nombre;
+        const count = item.doctorando_count;
+
+        if (!faculties[faculty]) {
+          faculties[faculty] = {};
         }
-        return context.bar.height < 60 ? null : item.value?.toString();
-      }}
-      width={600}
-      height={350}
-    />
+        faculties[faculty][program] = count;
+
+        if (!colors[program]) {
+          colors[program] = `hsl(${Math.random() * 360}, 70%, 50%)`;
+        }
+      });
+
+      const labels = Object.keys(faculties);
+      const datasets = Object.keys(colors).map(program => ({
+        label: program,
+        data: labels.map(faculty => faculties[faculty][program] || 0),
+        backgroundColor: colors[program],
+      }));
+
+      setChartData({
+        labels,
+        datasets,
+      });
+    }
+  }, [data]);
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Facultades',
+          font: {
+            size: 16,
+          },
+        },
+        ticks: {
+          autoSkip: false,
+          maxRotation: 90,
+          minRotation: 45,
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Número de Doctorandos',
+          font: {
+            size: 16,
+          },
+        },
+        beginAtZero: true,
+      },
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: (tooltipItem) => {
+            const count = tooltipItem.raw;
+            return `Doctorandos: ${count}`;
+          },
+        },
+        bodyFont: {
+          size: 14,
+        },
+      },
+      legend: {
+        display: true,
+        position: 'top',
+        labels: {
+          boxWidth: 15,
+          padding: 20,
+          font: {
+            size: 14,
+          },
+        },
+      },
+    },
+  };
+
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '90%', height: '100%', margin: '0 auto', marginTop: '5vh' }}>
+      <Bar data={chartData} options={options} />
+    </div>
   );
-}
+};
+
+BarChart1.propTypes = {
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      facultadarea_idarea__nombre: PropTypes.string.isRequired,
+      programa_idprograma__nombre: PropTypes.string.isRequired,
+      doctorando_count: PropTypes.number.isRequired,
+    })
+  )};
+
+export default BarChart1;
