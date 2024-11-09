@@ -31,7 +31,7 @@ export default function BasicTextFields({ initialData }) {
   const [showPassword, setShowPassword] = useState(false);
   const { loadUser, setLoadUser } = useContext(DataContext);
   const { state } = useContext(AuthContext);
-  const { token } = state;
+  const { tokenAccess } = state;
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
 
@@ -82,10 +82,10 @@ export default function BasicTextFields({ initialData }) {
 
     if (initialData) {
         console.log("Modificar:", formData);
-        await putUser(token, formData, formData.id);
+        await putUser(tokenAccess, formData, formData.id);
     } else {
         console.log("Crear:", formData);
-        await postUser(token, formData);
+        await postUser(tokenAccess, formData);
     }
     setFormData(initialFormData);
     setLoadUser(!loadUser);

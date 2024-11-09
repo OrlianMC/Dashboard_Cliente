@@ -15,11 +15,11 @@ const role_currencies = [
 
 const Navbar = () => {
     const { state, dispatch } = useContext(AuthContext);
-    const { role, user, token} = state;
+    const { role, user, tokenAccess} = state;
     const navigate = useNavigate();
     
     const handleLogout = async () => {
-        await postSesionLogout(token);
+        await postSesionLogout(tokenAccess);
         localStorage.removeItem('tokenAccess');
         localStorage.removeItem('tokenRefresh');
         localStorage.removeItem('role');

@@ -18,9 +18,9 @@ const Home = () => {
         setStatisticsData(response.data);
         setArrayPieChart2(response.data.doctoral_students_by_knowledge_area);
         setArrayBarChart2(response.data.doctoral_students_by_program_and_area);
-        console.log(response.data);
-        // console.log(response.data.doctoral_students_by_knowledge_area);
-        // console.log("StatisticsData:",statisticsData);
+        console.log("Response",response.data);
+        console.log(response.data.doctoral_students_by_knowledge_area);
+        console.log("StatisticsData:",statisticsData);
         console.log("arrayPieChart2:",arrayPieChart2);
       } catch (error) {
         console.error("Error al cargar los datos:", error);

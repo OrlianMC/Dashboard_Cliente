@@ -67,6 +67,8 @@ export default function LoginForm() {
         const roleStorage = response.data.token.role
         const usernameStorage = response.data.token.username
 
+        console.log("Loginnnnnnnnnnnn: ",tokenAccess);
+
         localStorage.setItem('tokenAccess', tokenAccess);
         localStorage.setItem('tokenRefresh', tokenRefresh);
         localStorage.setItem('role', roleStorage);
@@ -75,10 +77,10 @@ export default function LoginForm() {
         dispatch({
           type: 'LOGIN',
           payload: {
-            user: response.data.token.username,
-            role: response.data.token.role,
-            tokenAccess: response.data.token.access,
-            tokenRefresh: response.data.token.refresh,
+            user: usernameStorage,
+            role: roleStorage,
+            tokenAccess: tokenAccess,
+            tokenRefresh: tokenRefresh,
             token: response.data.token,
           },
         });

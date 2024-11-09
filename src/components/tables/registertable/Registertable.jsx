@@ -203,13 +203,13 @@ export default function EnhancedTable() {
   const [rows, setRows] = useState([]);
   const { loadUser, setLoadUser } = useContext(DataContext);
   const { state } = useContext(AuthContext);
-  const { token } = state;
+  const { token, tokenAccess, tokenRefresh, role, user } = state;
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const mappedData = await getUser(token);
+        const mappedData = await getUser(tokenAccess);
         setRows(mappedData.data);
       } catch (error) {
         console.error("Error al cargar los datos:", error);
@@ -256,7 +256,7 @@ export default function EnhancedTable() {
   const handleDelete = async () => {
     if (window.confirm("¿Estás seguro de que deseas eliminar los elementos seleccionados?")) {
       try {
-        await Promise.all(selected.map(item => deleteUser(token, item)));
+        await Promise.all(selected.map(item => deleteUser(tokenAccess, item)));
         const updatedRows = rows.filter(row => !selected.includes(row.id));
         setRows(updatedRows);
         setLoadUser(!loadUser);

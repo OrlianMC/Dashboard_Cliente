@@ -8,7 +8,7 @@ export const postSesion = async (data) => {
 export const postSesionLogout = (token) => {
     const config = {
         headers: {
-            'Authorization': 'Bearer ' + token.access
+            'Authorization': 'Bearer ' + token
         }
     };
     console.log("Metodo postSesionLogout")
