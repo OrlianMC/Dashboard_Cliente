@@ -84,6 +84,34 @@
         }
     }
 
+    .sparklineChart {
+        display: flex;
+        width: auto;
+        height: auto;
+        align-items: center;
+        justify-content: space-evenly;
+        padding-bottom: 5vh;
+
+        .chart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 80vh;
+            height: 40vh;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            flex: 0 0 auto;
+
+            .titleChart {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 30px;
+            }
+        }
+    }
+
     @media (max-width: 768px) {
         .home {
             flex-direction: column;
@@ -94,6 +122,10 @@
         }
 
         .barChart {
+            flex-direction: column;
+        }
+
+        .sparklineChart {
             flex-direction: column;
         }
 
