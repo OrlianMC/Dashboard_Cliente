@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend, Filler } from 'chart.js';
 
-// Registrar todos los elementos necesarios, incluyendo Filler
 ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend, Filler);
 
 const SparklineChart1 = ({ data }) => {
@@ -90,7 +89,7 @@ const SparklineChart1 = ({ data }) => {
   };
 
   return (
-    <div style={{ width: '100%', height: '200px' }}>
+    <div style={{ width: '100%', height: '100%' }}>
       <Line data={chartData} options={options} />
     </div>
   );

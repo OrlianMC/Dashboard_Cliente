@@ -98,7 +98,7 @@
             align-items: center;
             justify-content: center;
             width: 80vh;
-            height: 40vh;
+            height: 50vh;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 10px;
             flex: 0 0 auto;
@@ -132,6 +132,10 @@
         .buttom {
             width: 100%;
             margin-top: 10px;
+        }
+
+        .chart {
+            height: auto;
         }
     }
 }

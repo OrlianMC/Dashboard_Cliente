@@ -3,6 +3,7 @@ import PieChart1 from "../../components/charts/pieChart1";
 import PieChart2 from "../../components/charts/pieChart2";
 import BarChart1 from "../../components/charts/barChart1";
 import BarChart2 from "../../components/charts/barChart2";
+import BarChart3 from "../../components/charts/barChart3";
 import SparklineChart1 from "../../components/charts/sparklineChart1";
 import { getStatistics } from "../../api/statistics_api";
 import "./home.css";
@@ -11,6 +12,7 @@ const Home = () => {
   const [statisticsData, setStatisticsData] = useState({});
   const [arrayPieChart2, setArrayPieChart2] = useState([]);
   const [arrayBarChart2, setArrayBarChart2] = useState([]);
+  const [arrayBarChart3, setArrayBarChart3] = useState([]);
   const [arraySparklineChart1, setArraySparklineChart1] = useState([]);
 
   useEffect(() => {
@@ -21,6 +23,7 @@ const Home = () => {
         setArrayPieChart2(response.data.doctoral_students_by_knowledge_area);
         setArrayBarChart2(response.data.doctoral_students_by_program_and_area);
         setArraySparklineChart1(response.data.doctoral_students_and_graduates_by_year);
+        setArrayBarChart3(response.data.doctoral_students_and_doctors_by_age_groups);
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       }
@@ -86,10 +89,11 @@ const Home = () => {
           {arraySparklineChart1.length > 0 ? <SparklineChart1 data={arraySparklineChart1} /> : <p>Cargando...</p>}
         </div>
         <div className="chart">
-          <span className="titleChart">Defensas de doctorado por año</span>
-          {arraySparklineChart1.length > 0 ? <SparklineChart1 data={arraySparklineChart1} /> : <p>Cargando...</p>}
+          <span className="titleChart">Distribución de doctorandos y doctores por grupos etarios</span>
+          {arrayBarChart3.length > 0 ? <BarChart3 data={arrayBarChart3} /> : <p>Cargando...</p>}
         </div>
       </div>
+
     </div>
   );
 }
