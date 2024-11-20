@@ -31,6 +31,7 @@ import { deleteDoctor, getDoctor } from '../../../api/doctor_api';
 import { getArea } from '../../../api/area_api'; 
 import { getPerson } from '../../../api/person_api'; 
 import './doctortable.css';
+import { getKnowledge_area } from '../../../api/knowledge_area_api';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -64,6 +65,7 @@ const headCells = [
   { id: 'iddoctor', numeric: false, disablePadding: false, label: 'ID' },
   { id: 'persona_idpersona', numeric: false, disablePadding: false, label: 'Persona' },
   { id: 'facultadarea_idarea', numeric: false, disablePadding: false, label: 'Facultad Área' },
+  { id: 'areadeconocimiento_idareadeconocimiento', numeric: false, disablePadding: false, label: 'Área de Conocimiento' },
   { id: 'edicion', numeric: false, disablePadding: false, label: 'Edición' },
 ];
 
@@ -195,7 +197,7 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
-  const { areas, setAreas, persons, setPersons, setDoctors, loadDoctor, setLoadDoctor } = useContext(DataContext);
+  const { knowledge_areas, setKnowledge_areas, areas, setAreas, persons, setPersons, setDoctors, loadDoctor, setLoadDoctor } = useContext(DataContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -215,6 +217,7 @@ export default function EnhancedTable() {
         await Promise.all([
           fetchIfNeeded(getPerson, setPersons, persons),
           fetchIfNeeded(getArea, setAreas, areas),
+          fetchIfNeeded(getKnowledge_area, setKnowledge_areas, knowledge_areas),
         ]);
 
       } catch (error) {
@@ -300,7 +303,8 @@ export default function EnhancedTable() {
   const filteredRows = rows.filter((row) =>
     String(row.iddoctor).toLowerCase().includes(searchTerm.toLowerCase()) ||
     (persons.find(person => person.idpersona === row.persona_idpersona)?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (areas.find(area => area.idarea === row.facultadarea_idarea)?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase())
+    (areas.find(area => area.idarea === row.facultadarea_idarea)?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (knowledge_areas.find(knowledge_area => knowledge_area.idareadeconocimiento === row.areadeconocimiento_idareadeconocimiento)?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const visibleRows = React.useMemo(
@@ -365,6 +369,7 @@ export default function EnhancedTable() {
                     </TableCell>
                     <TableCell align="left">{persons.find(person => person.idpersona === row.persona_idpersona)?.nombre || 'N/A'}</TableCell>
                     <TableCell align="left">{areas.find(area => area.idarea === row.facultadarea_idarea)?.nombre || 'N/A'}</TableCell>
+                    <TableCell align="left">{knowledge_areas.find(knowledge_area => knowledge_area.idareadeconocimiento === row.areadeconocimiento_idareadeconocimiento)?.nombre || 'N/A'}</TableCell>
                     <TableCell align="center">
                       <Button
                         variant="contained"

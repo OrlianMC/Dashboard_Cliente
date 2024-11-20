@@ -62,6 +62,7 @@ function stableSort(array, comparator) {
 const headCells = [
   { id: 'idarea', numeric: false, disablePadding: false, label: 'ID' },
   { id: 'nombre', numeric: false, disablePadding: false, label: 'Nombre' },
+  { id: 'codigo', numeric: false, disablePadding: false, label: 'Código' },
   { id: 'edicion', numeric: false, disablePadding: false, label: 'Edición' },
 ];
 
@@ -200,8 +201,8 @@ export default function EnhancedTable() {
     const fetchData = async () => {
       try {
         const mappedData = await getArea();
-        const response = await getStatistics();
-        console.log("Estadistica", response.data)
+        // const response = await getStatistics();
+        // console.log("Estadistica", response.data)
         setAreas(mappedData.data);
         setRows(mappedData.data);
       } catch (error) {
@@ -285,7 +286,8 @@ export default function EnhancedTable() {
   };
 
   const filteredRows = rows.filter((row) =>
-    row.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    row.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    row.codigo.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const visibleRows = React.useMemo(
@@ -308,7 +310,7 @@ export default function EnhancedTable() {
           searchTerm={searchTerm}
           handleSearch={handleSearch}
         />
-        <TableContainer sx={{ maxHeight: 500, maxWidth:1200, overflowX: 'auto' }}>
+        <TableContainer sx={{ maxHeight: 500, maxWidth: 1200, overflowX: 'auto' }}>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
@@ -349,6 +351,7 @@ export default function EnhancedTable() {
                       {row.idarea}
                     </TableCell>
                     <TableCell align="left">{row.nombre}</TableCell>
+                    <TableCell align="left">{row.codigo}</TableCell>
                     <TableCell align="center">
                       <Button
                         variant="contained"

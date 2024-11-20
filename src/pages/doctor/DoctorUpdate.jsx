@@ -8,6 +8,7 @@ const DoctorUpdate = () => {
   const dataToEdit = location.state?.row || {
     persona_idpersona: '',
     facultadarea_idarea: '',
+    areadeconocimiento_idareadeconocimiento: '',
   };
 
   return (

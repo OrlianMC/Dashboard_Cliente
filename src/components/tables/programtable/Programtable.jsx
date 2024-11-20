@@ -29,8 +29,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import { DataContext } from '../../../dataContext/dataContext';
 import { useContext } from 'react';
 import { deleteProgram, getProgram } from '../../../api/program_api';
-import { getArea } from '../../../api/area_api';
 import { getKnowledge_area } from '../../../api/knowledge_area_api';
+import { getCenter } from '../../../api/center_api';
 import './programtable.css';
 
 function descendingComparator(a, b, orderBy) {
@@ -68,7 +68,7 @@ const headCells = [
   { id: 'desarrollolocal', numeric: false, disablePadding: false, label: 'Desarrollo Local' },
   { id: 'adistancia', numeric: false, disablePadding: false, label: 'Distancia' },
   { id: 'estdesarrollomun', numeric: false, disablePadding: false, label: 'Desarrollo Municipal' },
-  { id: 'area_idarea', numeric: false, disablePadding: false, label: 'Área' },
+  { id: 'centro_idcentro', numeric: false, disablePadding: false, label: 'Centro' },
   { id: 'areadeconocimiento_idareadeconocimiento', numeric: false, disablePadding: false, label: 'Área de Conocimiento' },
   { id: 'edicion', numeric: false, disablePadding: false, label: 'Edición' },
 ];
@@ -202,7 +202,7 @@ export default function EnhancedTable() {
   const [searchTerm, setSearchTerm] = useState('');
   const [rows, setRows] = useState([]);
   const navigate = useNavigate();
-  const { areas, setAreas, knowledge_areas, setKnowledge_areas, setPrograms, loadProgram, setLoadProgram } = useContext(DataContext);
+  const { centers, setCenters, knowledge_areas, setKnowledge_areas, setPrograms, loadProgram, setLoadProgram } = useContext(DataContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -220,7 +220,7 @@ export default function EnhancedTable() {
   
         await Promise.all([
           fetchIfNeeded(getKnowledge_area, setKnowledge_areas, knowledge_areas),
-          fetchIfNeeded(getArea, setAreas, areas),
+          fetchIfNeeded(getCenter, setCenters, centers),
         ]);
 
       } catch (error) {
@@ -305,7 +305,7 @@ export default function EnhancedTable() {
 
   const filteredRows = rows.filter((row) =>
     row.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (areas.find(area => area.idarea === row.area_idarea)?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (centers.find(center => center.idcentro === row.centro_idcentro)?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase()) ||
     (knowledge_areas.find(knowledge_area => knowledge_area.idareadeconocimiento === row.areadeconocimiento_idareadeconocimiento)?.nombre || 'N/A').toLowerCase().includes(searchTerm.toLowerCase())
 );
 
@@ -374,7 +374,7 @@ export default function EnhancedTable() {
                     <TableCell align="left">{row.desarrollolocal ? 'Si' : 'No' }</TableCell>
                     <TableCell align="left">{row.adistancia ? 'Si' : 'No'}</TableCell>
                     <TableCell align="left">{row.estdesarrollomun ? 'Si' : 'No'}</TableCell>
-                    <TableCell align="left">{areas.find(area => area.idarea === row.area_idarea)?.nombre || 'N/A'}</TableCell>
+                    <TableCell align="left">{centers.find(center => center.idcentro === row.centro_idcentro)?.nombre || 'N/A'}</TableCell>
                     <TableCell align="left">{knowledge_areas.find(knowledge_area => knowledge_area.idareadeconocimiento === row.areadeconocimiento_idareadeconocimiento)?.nombre || 'N/A'}</TableCell>
                     <TableCell align="center">
                       <Button

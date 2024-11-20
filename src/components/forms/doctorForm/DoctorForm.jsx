@@ -12,14 +12,14 @@ export default function BasicTextFields({ initialData }) {
   const initialFormData = {
     persona_idpersona: '',
     facultadarea_idarea: '',
+    areadeconocimiento_idareadeconocimiento: '',
   };
 
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
-  const { areas, persons, loadDoctor, setLoadDoctor } = useContext(DataContext);
+  const { areas, persons, knowledge_areas ,loadDoctor, setLoadDoctor } = useContext(DataContext);
   const navigate = useNavigate();
 
-  // Efecto para cargar los datos iniciales
   useEffect(() => {
     if (initialData) {
       setFormData(initialData);
@@ -32,7 +32,7 @@ export default function BasicTextFields({ initialData }) {
       ...formData,
       [name]: value,
     });
-    setErrors({ ...errors, [name]: '' }); // Limpiar el error del campo
+    setErrors({ ...errors, [name]: '' });
   };
 
   const validateForm = () => {
@@ -42,6 +42,9 @@ export default function BasicTextFields({ initialData }) {
     }
     if (!formData.facultadarea_idarea) {
       errors.facultadarea_idarea = "Seleccione un área.";
+    }
+    if (!formData.areadeconocimiento_idareadeconocimiento) {
+      errors.areadeconocimiento_idareadeconocimiento = "Seleccione un área de conocimiento.";
     }
     return errors;
   };
@@ -94,7 +97,7 @@ export default function BasicTextFields({ initialData }) {
           helperText={errors.persona_idpersona || "Seleccione el nombre de la persona"}
           className="customTextField"
           onChange={handleChange}
-          error={!!errors.persona_idpersona} // Indica que hay un error
+          error={!!errors.persona_idpersona}
         >
           {persons.map((option) => (
             <MenuItem key={option.nombre} value={option.idpersona}>
@@ -110,10 +113,26 @@ export default function BasicTextFields({ initialData }) {
           helperText={errors.facultadarea_idarea || "Seleccione el área"}
           className="customTextField"
           onChange={handleChange}
-          error={!!errors.facultadarea_idarea} // Indica que hay un error
+          error={!!errors.facultadarea_idarea}
         >
           {areas.map((option) => (
             <MenuItem key={option.nombre} value={option.idarea}>
+              {option.nombre}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          name="areadeconocimiento_idareadeconocimiento"
+          select
+          label="Área de Conocimiento"
+          value={formData.areadeconocimiento_idareadeconocimiento}
+          helperText={errors.areadeconocimiento_idareadeconocimiento || "Seleccione el área de conocimiento"}
+          className="customTextField"
+          onChange={handleChange}
+          error={!!errors.areadeconocimiento_idareadeconocimiento}
+        >
+          {knowledge_areas.map((option) => (
+            <MenuItem key={option.nombre} value={option.idareadeconocimiento}>
               {option.nombre}
             </MenuItem>
           ))}

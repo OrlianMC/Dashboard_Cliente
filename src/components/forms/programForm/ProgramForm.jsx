@@ -21,13 +21,13 @@ export default function BasicTextFields({ initialData }) {
     desarrollolocal: '',
     adistancia: '',
     estdesarrollomun: '',
-    area_idarea: '',
+    centro_idcentro: '',
     areadeconocimiento_idareadeconocimiento: '',
   };
 
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
-  const { areas, knowledge_areas, loadProgram, setLoadProgram } = useContext(DataContext);
+  const { centers, knowledge_areas, loadProgram, setLoadProgram } = useContext(DataContext);
   const navigate = useNavigate();
 
   // Efecto para cargar los datos iniciales
@@ -49,11 +49,19 @@ export default function BasicTextFields({ initialData }) {
   const validateForm = () => {
     const newErrors = {};
     if (!formData.nombre) newErrors.nombre = "El nombre es obligatorio.";
-    if (!formData.sectorest) newErrors.sectorest = "Seleccione el sector estratégico.";
-    if (!formData.desarrollolocal) newErrors.desarrollolocal = "Seleccione la opción de desarrollo local.";
-    if (!formData.adistancia) newErrors.adistancia = "Seleccione la opción de distancia.";
-    if (!formData.estdesarrollomun) newErrors.estdesarrollomun = "Seleccione la opción de desarrollo municipal.";
-    if (!formData.area_idarea) newErrors.area_idarea = "Seleccione el área.";
+    if (formData.sectorest === undefined || formData.sectorest === null) {
+      newErrors.sectorest = "Seleccione el sector estratégico.";
+    }
+    if (formData.desarrollolocal === undefined || formData.desarrollolocal === null) {
+      newErrors.desarrollolocal = "Seleccione la opción de desarrollo local.";
+    }
+    if (formData.adistancia === undefined || formData.adistancia === null) {
+      newErrors.adistancia = "Seleccione la opción de distancia.";
+    }
+    if (formData.estdesarrollomun === undefined || formData.estdesarrollomun === null) {
+      newErrors.estdesarrollomun = "Seleccione la opción de desarrollo municipal.";
+    }
+    if (!formData.centro_idcentro) newErrors.centro_idcentro = "Seleccione el centro.";
     if (!formData.areadeconocimiento_idareadeconocimiento) newErrors.areadeconocimiento_idareadeconocimiento = "Seleccione el área de conocimiento.";
 
     return newErrors;
@@ -179,17 +187,17 @@ export default function BasicTextFields({ initialData }) {
           ))}
         </TextField>
         <TextField
-          name="area_idarea"
+          name="centro_idcentro"
           select
-          label="Área"
-          value={formData.area_idarea}
-          helperText={errors.area_idarea || "Seleccione el área"}
+          label="Centro"
+          value={formData.centro_idcentro}
+          helperText={errors.centro_idcentro || "Seleccione el centro"}
           className="customTextField"
           onChange={handleChange}
-          error={!!errors.area_idarea}
+          error={!!errors.centro_idcentro}
         >
-          {areas.map((option) => (
-            <MenuItem key={option.nombre} value={option.idarea}>
+          {centers.map((option) => (
+            <MenuItem key={option.nombre} value={option.idcentro}>
               {option.nombre}
             </MenuItem>
           ))}

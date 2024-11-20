@@ -17,7 +17,7 @@ const BarChart2 = ({ data }) => {
       const colors = {};
 
       data.forEach(item => {
-        const faculty = item.facultadarea_idarea__nombre;
+        const faculty = item.facultadarea_idarea__codigo;
         const program = item.programa_idprograma__nombre;
         const count = item.doctorando_count;
 
@@ -112,7 +112,7 @@ const BarChart2 = ({ data }) => {
 BarChart2.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
-      facultadarea_idarea__nombre: PropTypes.string.isRequired,
+      facultadarea_idarea__codigo: PropTypes.string.isRequired,
       programa_idprograma__nombre: PropTypes.string.isRequired,
       doctorando_count: PropTypes.number.isRequired,
     })

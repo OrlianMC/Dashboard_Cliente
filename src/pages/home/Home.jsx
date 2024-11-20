@@ -11,6 +11,8 @@ import "./home.css";
 const Home = () => {
   const [statisticsData, setStatisticsData] = useState({});
   const [arrayPieChart2, setArrayPieChart2] = useState([]);
+  const [arrayPieChart1, setArrayPieChart1] = useState([]);
+  const [arrayBarChart1, setArrayBarChart1] = useState([]);
   const [arrayBarChart2, setArrayBarChart2] = useState([]);
   const [arrayBarChart3, setArrayBarChart3] = useState([]);
   const [arraySparklineChart1, setArraySparklineChart1] = useState([]);
@@ -20,7 +22,9 @@ const Home = () => {
       try {
         const response = await getStatistics();
         setStatisticsData(response.data);
+        setArrayPieChart1(response.data.doctor_by_knowledge_area);
         setArrayPieChart2(response.data.doctoral_students_by_knowledge_area);
+        setArrayBarChart1(response.data.doctor_by_area_and_knowledge_area);
         setArrayBarChart2(response.data.doctoral_students_by_program_and_area);
         setArraySparklineChart1(response.data.doctoral_students_and_graduates_by_year);
         setArrayBarChart3(response.data.doctoral_students_and_doctors_by_age_groups);
@@ -63,8 +67,8 @@ const Home = () => {
 
       <div className="pieChart">
         <div className="chart">
-          Composición de doctorandos por áreas del conocimiento
-          {arrayPieChart2.length > 0 ? <PieChart1 data={arrayPieChart2} /> : <p>Cargando...</p>}
+          Composición de doctores por áreas del conocimiento
+          {arrayPieChart1.length > 0 ? <PieChart1 data={arrayPieChart1} /> : <p>Cargando...</p>}
         </div>
         <div className="chart">
           Composición de doctorandos por áreas del conocimiento
@@ -75,10 +79,10 @@ const Home = () => {
       <div className="barChart">
         <div className="chart">
           Composición de doctores por áreas del conocimiento y facultad
-          {arrayBarChart2.length > 0 ? <BarChart1 data={arrayBarChart2} /> : <p>Cargando...</p>}
+          {arrayBarChart1.length > 0 ? <BarChart1 data={arrayBarChart1} /> : <p>Cargando...</p>}
         </div>
         <div className="chart">
-          Relación de doctorandos por facultad y programa
+          Composición de doctorandos por facultad y programa
           {arrayBarChart2.length > 0 ? <BarChart2 data={arrayBarChart2} /> : <p>Cargando...</p>}
         </div>
       </div>

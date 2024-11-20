@@ -18,11 +18,11 @@ const PieChart1 = ({ data }) => {
     return <div>No hay datos disponibles para mostrar.</div>;
   }
 
-  const total = data.reduce((sum, element) => sum + element.doctorando_count, 0);
+  const total = data.reduce((sum, element) => sum + element.doctor_count, 0);
 
   useEffect(() => {
     const labels = data.map(item => item.nombre);
-    const counts = data.map(item => item.doctorando_count);
+    const counts = data.map(item => item.doctor_count);
     const colors = data.map(() => `hsl(${Math.random() * 360}, 70%, 50%)`); // Colores aleatorios
 
     setChartData({
@@ -78,7 +78,7 @@ PieChart1.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       nombre: PropTypes.string.isRequired,
-      doctorando_count: PropTypes.number.isRequired,
+      doctor_count: PropTypes.number.isRequired,
     })
   ).isRequired,
 };

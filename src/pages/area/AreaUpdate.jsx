@@ -7,6 +7,7 @@ const AreaUpdate = () => {
   const location = useLocation();
   const dataToEdit = location.state?.row || {
     nombre: '',
+    codigo: '',
   };
 
   return (

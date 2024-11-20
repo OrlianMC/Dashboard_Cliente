@@ -17,9 +17,9 @@ const BarChart1 = ({ data }) => {
       const colors = {};
 
       data.forEach(item => {
-        const faculty = item.facultadarea_idarea__nombre;
-        const program = item.programa_idprograma__nombre;
-        const count = item.doctorando_count;
+        const faculty = item.facultadarea_idarea__codigo;
+        const program = item.areadeconocimiento_idareadeconocimiento__nombre;
+        const count = item.doctor_count;
 
         if (!faculties[faculty]) {
           faculties[faculty] = {};
@@ -79,7 +79,9 @@ const BarChart1 = ({ data }) => {
         callbacks: {
           label: (tooltipItem) => {
             const count = tooltipItem.raw;
-            return `Doctorandos: ${count}`;
+            const datasetIndex = tooltipItem.datasetIndex;
+            const knowledge_area = chartData.datasets[datasetIndex].label;
+            return `${knowledge_area}: ${count}`;
           },
         },
         bodyFont: {
@@ -110,9 +112,9 @@ const BarChart1 = ({ data }) => {
 BarChart1.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
-      facultadarea_idarea__nombre: PropTypes.string.isRequired,
-      programa_idprograma__nombre: PropTypes.string.isRequired,
-      doctorando_count: PropTypes.number.isRequired,
+      facultadarea_idarea__codigo: PropTypes.string.isRequired,
+      areadeconocimiento_idareadeconocimiento__nombre: PropTypes.string.isRequired,
+      doctor_count: PropTypes.number.isRequired,
     })
   )};
 

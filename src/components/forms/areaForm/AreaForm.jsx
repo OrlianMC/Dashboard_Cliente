@@ -10,6 +10,7 @@ import "./areaForm.css";
 export default function BasicTextFields({ initialData }) {
   const initialFormData = {
     nombre: '',
+    codigo: '',
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -41,7 +42,10 @@ export default function BasicTextFields({ initialData }) {
       errors.nombre = "El nombre debe tener al menos 3 caracteres.";
     } else if (formData.nombre.length > 50) {
       errors.nombre = "El nombre no puede exceder los 50 caracteres.";
-    } 
+    }
+    else if (!formData.codigo) {
+      errors.nombre = "El codigo es obligatorio.";
+    }
     // else if (!/^[a-zA-Z\s]*$/.test(formData.nombre)) {
     //   errors.nombre = "El nombre solo puede contener letras y espacios.";
     // }
@@ -51,7 +55,7 @@ export default function BasicTextFields({ initialData }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const validationErrors = validateForm();
-    
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return; // No enviar el formulario si hay errores
@@ -97,6 +101,16 @@ export default function BasicTextFields({ initialData }) {
           onChange={handleChange}
           error={!!errors.nombre} // Indica que hay un error
           helperText={errors.nombre} // Muestra el mensaje de error
+        />
+        <TextField
+          name="codigo"
+          label="Código"
+          variant="outlined"
+          className="customTextField"
+          value={formData.codigo}
+          onChange={handleChange}
+          error={!!errors.codigo} // Indica que hay un error
+          helperText={errors.codigo} // Muestra el mensaje de error
         />
         <div className='buttomContainer'>
           <Button className='buttom' type="button" onClick={handleCancel}>Cancelar</Button>
