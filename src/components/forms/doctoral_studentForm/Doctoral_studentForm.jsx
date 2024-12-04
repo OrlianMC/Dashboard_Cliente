@@ -51,21 +51,21 @@ export default function BasicTextFields({ initialData }) {
 
   const validateForm = () => {
     const errors = {};
-    if (!formData.fdefensa) {
-      errors.fdefensa = "La fecha de defensa es obligatoria.";
-    }
-    if (!formData.fingreso) {
-      errors.fingreso = "La fecha de ingreso es obligatoria.";
-    }
+    // if (!formData.fdefensa) {
+    //   errors.fdefensa = "La fecha de defensa es obligatoria.";
+    // }
+    // if (!formData.fingreso) {
+    //   errors.fingreso = "La fecha de ingreso es obligatoria.";
+    // }
     if (!formData.temadetesis) {
       errors.temadetesis = "El tema de tesis es obligatorio.";
     }
-    if (!formData.fingles) {
-      errors.fingles = "La fecha de inglés es obligatoria.";
-    }
-    if (!formData.fespecialidad) {
-      errors.fespecialidad = "La fecha de especialidad es obligatoria.";
-    }
+    // if (!formData.fingles) {
+    //   errors.fingles = "La fecha de inglés es obligatoria.";
+    // }
+    // if (!formData.fespecialidad) {
+    //   errors.fespecialidad = "La fecha de especialidad es obligatoria.";
+    // }
     if (formData.desarrollolocal === '') {
       errors.desarrollolocal = "Seleccione una opción para desarrollo local.";
     }

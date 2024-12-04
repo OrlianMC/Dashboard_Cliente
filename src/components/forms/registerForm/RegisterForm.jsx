@@ -37,7 +37,7 @@ export default function BasicTextFields({ initialData }) {
 
   useEffect(() => {
     if (initialData) {
-      setFormData({ 
+      setFormData({
         ...initialFormData,
         ...initialData
       });
@@ -56,17 +56,22 @@ export default function BasicTextFields({ initialData }) {
   const validateForm = () => {
     const errors = {};
     if (!formData.username) {
-        errors.username = "El nombre de usuario es obligatorio";
+      errors.username = "El nombre de usuario es obligatorio";
     }
-    if (!formData.password) {
-        errors.password = "La contraseña es obligatoria";
-    } else if (formData.password.length < 8) {
+    // if (!formData.password) {
+    //     errors.password = "La contraseña es obligatoria";
+    // } else if (formData.password.length < 8) {
+    //     errors.password = "La contraseña debe tener al menos 8 caracteres";
+    // }
+    if (formData.password) {
+      if (formData.password.length < 8) {
         errors.password = "La contraseña debe tener al menos 8 caracteres";
+      }
     }
     if (!formData.email) {
-        errors.email = "El correo es obligatorio";
+      errors.email = "El correo es obligatorio";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-        errors.email = "El correo no es válido";
+      errors.email = "El correo no es válido";
     }
     return errors;
   };
@@ -74,19 +79,32 @@ export default function BasicTextFields({ initialData }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const validationErrors = validateForm();
-    
+
     if (Object.keys(validationErrors).length > 0) {
-        setErrors(validationErrors);
-        return;
+      setErrors(validationErrors);
+      return;
+    }
+
+    const dataToSend = { ...formData };
+    if (!dataToSend.password) {
+      delete dataToSend.password;
     }
 
     if (initialData) {
-        console.log("Modificar:", formData);
-        await putUser(tokenAccess, formData, formData.id);
+      console.log("Modificar:", dataToSend);
+      await putUser(tokenAccess, dataToSend, formData.id);
     } else {
-        console.log("Crear:", formData);
-        await postUser(tokenAccess, formData);
+      console.log("Crear:", dataToSend);
+      await postUser(tokenAccess, dataToSend);
     }
+
+    // if (initialData) {
+    //   console.log("Modificar:", formData);
+    //   await putUser(tokenAccess, formData, formData.id);
+    // } else {
+    //   console.log("Crear:", formData);
+    //   await postUser(tokenAccess, formData);
+    // }
     setFormData(initialFormData);
     setLoadUser(!loadUser);
     navigate(-1);
@@ -126,27 +144,27 @@ export default function BasicTextFields({ initialData }) {
           helperText={errors.username}
         />
         <TextField
-            name="password"
-            label="Contraseña"
-            variant="outlined"
-            type={showPassword ? 'text' : 'password'}
-            className="customTextField"
-            value={formData.password}
-            onChange={handleChange}
-            error={!!errors.password}
-            helperText={errors.password}
-            InputProps={{
-                endAdornment: (
-                    <InputAdornment position="end">
-                        <IconButton
-                            onClick={handleClickShowPassword}
-                            edge="end"
-                        >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                    </InputAdornment>
-                ),
-            }}
+          name="password"
+          label="Contraseña"
+          variant="outlined"
+          type={showPassword ? 'text' : 'password'}
+          className="customTextField"
+          value={formData.password}
+          onChange={handleChange}
+          error={!!errors.password}
+          helperText={errors.password}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={handleClickShowPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
         <TextField
           name="email"
